@@ -2,516 +2,557 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>FitDash — Nisan 2025</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>ASAR Fitness</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 :root{
-  --bg:#080a10;--bg2:#0f1117;--bg3:#161922;--bg4:#1e222e;--bg5:#252a38;
-  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
-  --text:#f0f2fa;--text2:#8892b0;--text3:#4a5270;
-  --blue:#5b9cf6;--blue2:#3b7de0;--blue-dim:rgba(91,156,246,0.13);--blue-glow:rgba(91,156,246,0.25);
-  --green:#2ecc87;--green-dim:rgba(46,204,135,0.12);--green-glow:rgba(46,204,135,0.3);
-  --red:#ff5f7e;--red-dim:rgba(255,95,126,0.12);
-  --amber:#ffb340;--amber-dim:rgba(255,179,64,0.12);
-  --purple:#a78bfa;--purple-dim:rgba(167,139,250,0.12);
-  --cyan:#22d3ee;--cyan-dim:rgba(34,211,238,0.12);
-  --radius:14px;--radius-sm:9px;--radius-pill:999px;
+  --bg:#07080e;--bg2:#0d0f16;--bg3:#13151f;--bg4:#191c28;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#eef0fa;--text2:#7a85a8;--text3:#3e4466;
+  --blue:#5b9cf6;--bdim:rgba(91,156,246,0.15);--bglow:rgba(91,156,246,0.3);
+  --green:#2ecc87;--gdim:rgba(46,204,135,0.13);--gglow:rgba(46,204,135,0.3);
+  --red:#ff5f7e;--rdim:rgba(255,95,126,0.13);
+  --amber:#ffb340;--adim:rgba(255,179,64,0.13);
+  --purple:#a78bfa;--pdim:rgba(167,139,250,0.13);
+  --cyan:#22d3ee;
+  --r:12px;--rsm:8px;--rpill:999px;
   --font:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;
+  --nav-h:60px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5;overflow-x:hidden}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:3px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+img{display:block}
+button{cursor:pointer;font-family:var(--font)}
 
-/* ─── LAYOUT ─── */
-.layout{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:22px 0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.mobile-nav{display:none}
+.main{padding:26px 30px;min-width:0;overflow-x:hidden}
 
-/* ─── SIDEBAR ─── */
-.sidebar{
-  background:var(--bg2);
-  border-right:1px solid var(--border);
-  padding:24px 0;display:flex;flex-direction:column;
-  position:sticky;top:0;height:100vh;overflow-y:auto;
-}
-.sidebar-brand{padding:0 22px 22px;border-bottom:1px solid var(--border);margin-bottom:18px}
-.brand-logo{
-  width:42px;height:42px;border-radius:12px;
-  background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);
-  display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px;
-  box-shadow:0 4px 20px var(--blue-glow);
-}
-.brand-name{font-size:15px;font-weight:700;letter-spacing:-.01em}
-.brand-sub{font-size:11px;color:var(--text3);margin-top:2px}
-.nav-section{padding:0 12px;margin-bottom:4px}
-.nav-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;padding:0 10px;margin-bottom:6px;margin-top:8px}
-.nav-item{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 12px;border-radius:10px;font-size:13px;font-weight:500;
-  color:var(--text2);cursor:pointer;transition:all .15s;
-  border:none;background:none;width:100%;text-align:left;
-}
-.nav-item:hover{background:var(--bg3);color:var(--text)}
-.nav-item.active{background:var(--blue-dim);color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue-glow)}
-.nav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
-.nav-badge{
-  margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;
-  border-radius:var(--radius-pill);background:var(--green-dim);color:var(--green);
-  box-shadow:0 0 8px var(--green-glow);
-}
-.sidebar-bottom{margin-top:auto;padding:18px 22px;border-top:1px solid var(--border)}
-.sidebar-stat-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
-.profile-row{display:flex;align-items:center;gap:10px}
-.avatar{
-  width:36px;height:36px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;
-}
-.profile-name{font-size:13px;font-weight:600}
-.profile-detail{font-size:11px;color:var(--text3)}
+/* ── SIDEBAR ── */
+.sb-brand{padding:0 18px 18px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.logo-row{display:flex;align-items:center;gap:11px}
+.logo-svg{width:42px;height:42px;flex-shrink:0}
+.brand-name{font-size:21px;font-weight:800;letter-spacing:-.04em;background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.brand-tag{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.12em}
+.sb-sub{font-size:11px;color:var(--text3);padding:0 18px 14px;border-bottom:1px solid var(--border);margin-bottom:10px}
+.nav-lbl{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.13em;padding:0 10px;margin:10px 0 4px}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:13px;font-weight:500;color:var(--text2);border:none;background:none;width:100%;text-align:left;transition:all .15s;margin:0 8px;width:calc(100% - 16px)}
+.ni:hover{background:var(--bg3);color:var(--text)}
+.ni.active{background:var(--bdim);color:var(--blue);box-shadow:inset 0 0 0 1px rgba(91,156,246,.2)}
+.ni-ico{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.ni-badge{margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;border-radius:var(--rpill);background:var(--gdim);color:var(--green);box-shadow:0 0 8px var(--gglow)}
+.sb-bottom{margin-top:auto;padding:14px 18px;border-top:1px solid var(--border)}
+.avatar-row{display:flex;align-items:center;gap:10px}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
 
-/* ─── MAIN ─── */
-.main{padding:30px 36px;overflow-x:hidden;min-width:0}
+/* ── PAGE ── */
 .page{display:none}
-.page.active{display:block;animation:fadeIn .2s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:26px;flex-wrap:wrap;gap:14px}
-.page-title{font-size:24px;font-weight:700;letter-spacing:-.02em}
-.page-sub{font-size:13px;color:var(--text2);margin-top:2px}
-.today-badge{
-  font-size:12px;font-weight:600;padding:7px 16px;border-radius:var(--radius-pill);
-  background:var(--blue-dim);color:var(--blue);
-  box-shadow:0 0 0 1px var(--blue-glow);
+.page.active{display:block;animation:fi .2s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.pt{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.ps{font-size:12px;color:var(--text2);margin-top:2px}
+.tbadge{font-size:12px;font-weight:600;padding:6px 15px;border-radius:var(--rpill);background:var(--bdim);color:var(--blue);box-shadow:0 0 0 1px rgba(91,156,246,.2)}
+
+/* ── METRICS ── */
+.mrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.mc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:15px 17px;position:relative;overflow:hidden;transition:border-color .2s}
+.mc::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px}
+.mc.mb::before{background:linear-gradient(90deg,var(--blue),var(--purple))}
+.mc.mg::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.mc.mr::before{background:linear-gradient(90deg,var(--red),var(--amber))}
+.mc.ma::before{background:linear-gradient(90deg,var(--amber),var(--red))}
+.ml{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.mv{font-size:26px;font-weight:700;line-height:1;font-family:var(--mono)}
+.mu{font-size:13px;color:var(--text2);font-family:var(--font);margin-left:3px}
+.md{font-size:11px;margin-top:5px;font-weight:500}
+.dp{color:var(--green)}.dn{color:var(--red)}.dn2{color:var(--text3)}
+
+/* ── CARD ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:17px 19px}
+.ct{font-size:13px;font-weight:700;margin-bottom:13px;display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
+.ca{width:3px;height:14px;border-radius:2px;flex-shrink:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px}
+.g3{display:grid;grid-template-columns:1.7fr 1fr 1fr;gap:10px;margin-bottom:11px}
+.span2{grid-column:span 2}
+
+/* ══════════════════════════════════════════════
+   CALENDAR WEEK PICKER
+══════════════════════════════════════════════ */
+.cal-picker{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:14px}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.cal-nav{display:flex;gap:6px}
+.cal-nav-btn{width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cal-nav-btn:hover{background:var(--bg4);color:var(--text)}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.cal-wd{font-size:9px;font-weight:700;color:var(--text3);text-align:center;text-transform:uppercase;letter-spacing:.08em;padding:3px 0}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{
+  aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid transparent;
+  position:relative;background:var(--bg3);color:var(--text2);gap:2px;
 }
+.cal-day:hover:not(.cal-other-month){background:var(--bg4);color:var(--text)}
+.cal-day.cal-today{border-color:var(--blue);color:var(--blue);background:var(--bdim)}
+.cal-day.cal-done{background:var(--gdim);border-color:rgba(46,204,135,.35);color:var(--green)}
+.cal-day.cal-done::after{content:'✓';position:absolute;top:2px;right:4px;font-size:8px;color:var(--green);font-weight:700}
+.cal-day.cal-selected-week{border-color:rgba(91,156,246,.35);background:rgba(91,156,246,.07)}
+.cal-day.cal-train-day{/* has dot */}
+.cal-day-num{font-size:12px;font-weight:700;line-height:1}
+.cal-day-dot{width:4px;height:4px;border-radius:50%;background:var(--text3);transition:background .2s}
+.cal-day.cal-train-day .cal-day-dot{background:var(--amber)}
+.cal-day.cal-done .cal-day-dot{background:var(--green)}
+.cal-day.cal-blocked{opacity:.25;cursor:default}
+.cal-day.cal-other-month{opacity:.2;cursor:default}
+.cal-week-row{cursor:pointer}
+.cal-week-row:hover .cal-day:not(.cal-other-month){background:var(--bg4)}
 
-/* ─── METRIC CARDS ─── */
-.metrics-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
-.metric-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
-  padding:18px 20px;position:relative;overflow:hidden;transition:border-color .2s,transform .15s;
-}
-.metric-card:hover{border-color:var(--border2);transform:translateY(-1px)}
-.metric-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px}
-.metric-card.mc-blue::before{background:linear-gradient(90deg,var(--blue),var(--purple))}
-.metric-card.mc-green::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
-.metric-card.mc-red::before{background:linear-gradient(90deg,var(--red),var(--amber))}
-.metric-card.mc-amber::before{background:linear-gradient(90deg,var(--amber),var(--red))}
-.metric-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
-.metric-val{font-size:30px;font-weight:700;line-height:1;font-family:var(--mono);letter-spacing:-.02em}
-.metric-unit{font-size:14px;color:var(--text2);font-family:var(--font);margin-left:3px;font-weight:400}
-.metric-delta{font-size:12px;margin-top:7px;font-weight:500}
-.delta-pos{color:var(--green)}.delta-neg{color:var(--red)}.delta-neutral{color:var(--text3)}
+/* Seçili hafta bant */
+.cal-day.in-selected-week{background:rgba(91,156,246,.08);border-color:rgba(91,156,246,.2)}
+.cal-day.in-selected-week.cal-today{background:var(--bdim);border-color:var(--blue)}
+.cal-day.in-selected-week.cal-done{background:var(--gdim);border-color:rgba(46,204,135,.35)}
 
-/* ─── CARDS ─── */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px}
-.card-title{font-size:13px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
-.card-title-accent{width:3px;height:14px;border-radius:2px}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px}
-.grid-3{display:grid;grid-template-columns:1.7fr 1fr 1fr;gap:13px;margin-bottom:13px}
-.col-span-2{grid-column:span 2}
+.cal-week-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:14px}
+.ws-day{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rsm);padding:10px 5px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:88px}
+.ws-day:hover:not(.ws-blocked){background:var(--bg4);border-color:var(--border2)}
+.ws-day.ws-done{background:var(--gdim);border-color:rgba(46,204,135,.3)}
+.ws-day.ws-today{border-color:rgba(91,156,246,.4);box-shadow:0 0 0 1px rgba(91,156,246,.2)}
+.ws-day.ws-blocked{opacity:.3;cursor:default}
+.ws-day.ws-rest{background:var(--adim);border-color:rgba(255,179,64,.2);cursor:default}
+.ws-name{font-size:8px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.09em}
+.ws-date{font-size:11px;font-weight:700;font-family:var(--mono);color:var(--text2)}
+.ws-ico{font-size:16px}
+.ws-type{font-size:8px;font-weight:600;color:var(--text2);line-height:1.3}
+.ws-thumb{width:26px;height:26px;border-radius:5px;object-fit:cover;border:1px solid var(--border2)}
+.ws-tick{font-size:9px;color:var(--green);font-weight:700}
+.ws-dur{font-size:9px;color:var(--text3);font-family:var(--mono);margin-top:auto}
 
-/* ─── WEEK GRID ─── */
-.week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
-.day-slot{
-  background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);
-  padding:13px 8px;text-align:center;cursor:pointer;transition:all .18s;
-  min-height:128px;display:flex;flex-direction:column;align-items:center;gap:4px;
-}
-.day-slot:hover:not(.blocked){border-color:var(--border2);background:var(--bg4);transform:translateY(-2px)}
-.day-slot.done{background:var(--green-dim);border-color:rgba(46,204,135,.3);box-shadow:0 0 16px rgba(46,204,135,.08)}
-.day-slot.active-today{border-color:rgba(91,156,246,.4);box-shadow:0 0 0 1px rgba(91,156,246,.3)}
-.day-slot.blocked{opacity:.35;cursor:default;background:var(--bg2)}
-.day-slot.rest{background:var(--amber-dim);border-color:rgba(255,179,64,.25);cursor:default}
-.day-name-lbl{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em}
-.day-ico-lbl{font-size:22px;margin:3px 0}
-.day-type-lbl{font-size:10px;font-weight:600;color:var(--text2);line-height:1.3}
-.day-dur-lbl{font-size:10px;color:var(--text3);margin-top:auto;font-family:var(--mono)}
-.day-done-tick{font-size:11px;color:var(--green);font-weight:700;letter-spacing:.02em}
-
-/* ─── PROGRESS ─── */
-.prog-wrap{margin-bottom:16px}
-.prog-wrap:last-child{margin-bottom:0}
-.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
-.prog-name{font-size:12px;color:var(--text2);font-weight:500}
-.prog-val{font-size:12px;font-weight:600;font-family:var(--mono)}
-.prog-track{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
-.prog-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1)}
-
-/* ─── CHECKLIST ─── */
-.check-list{display:flex;flex-direction:column;gap:7px}
-.check-item{
-  display:flex;align-items:center;gap:10px;padding:9px 12px;
-  border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);
-  cursor:pointer;transition:all .15s;font-size:12px;color:var(--text2);font-weight:500;
-}
-.check-item:hover{border-color:var(--border2);color:var(--text)}
-.check-item.checked{background:var(--green-dim);border-color:rgba(46,204,135,.3)}
-.check-item.checked .check-text{text-decoration:line-through;color:var(--text3)}
-.check-box{
-  width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--green);
-}
-.check-item.checked .check-box{background:var(--green-dim);border-color:rgba(46,204,135,.5)}
-
-/* ─── INPUT / BTN ─── */
-.kilo-input-row{display:flex;gap:8px;margin-bottom:16px}
-.kilo-input-row input,.olcum-input{
-  padding:9px 14px;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:var(--radius-sm);color:var(--text);font-family:var(--mono);font-size:13px;outline:none;
-  transition:border-color .15s;
-}
-.kilo-input-row input{flex:1}
-.kilo-input-row input:focus,.olcum-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-dim)}
-.kilo-input-row input::placeholder{color:var(--text3)}
-.btn{
-  padding:9px 18px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;
-  border:none;border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;font-weight:600;
-  cursor:pointer;transition:opacity .15s,transform .1s;letter-spacing:.01em;
-}
-.btn:hover{opacity:.88;transform:translateY(-1px)}
-.btn:active{transform:none}
-.btn-ghost{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);background-image:none}
-.btn-ghost:hover{background:var(--bg4);color:var(--text)}
-.btn-green{background:linear-gradient(135deg,var(--green),#1ca86a);color:#fff;background-image:none}
-
-/* ─── MOVE TABLE (fallback) ─── */
-.move-table{width:100%;border-collapse:collapse;font-size:12px}
-.move-table th{text-align:left;padding:9px 11px;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border);background:var(--bg3)}
-.move-table td{padding:10px 11px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle}
-.move-table td:first-child{color:var(--text);font-weight:600}
-.move-table tr:last-child td{border-bottom:none}
-.move-table tr:hover td{background:var(--bg3)}
-.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 9px;border-radius:var(--radius-pill)}
-
-/* ─── PROGRAM ACCORDION ─── */
-.program-day-section{margin-bottom:8px}
-.program-day-header{
-  display:flex;align-items:center;gap:13px;padding:13px 18px;
-  background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);
-  cursor:pointer;transition:all .15s;
-}
-.program-day-header:hover{background:var(--bg4);border-color:var(--border2)}
-.program-day-title{font-size:14px;font-weight:600;letter-spacing:-.01em}
-.program-day-body{display:none}
-.program-day-body.open{display:block}
-
-/* ─── NOTIFS ─── */
-.notif{display:flex;align-items:flex-start;gap:11px;padding:13px 16px;border-radius:var(--radius-sm);border-left:3px solid;margin-bottom:10px;font-size:12px;font-weight:500;line-height:1.5}
-.notif-blue{background:var(--blue-dim);border-color:var(--blue);color:#93bbf9}
-.notif-green{background:var(--green-dim);border-color:var(--green);color:#6fdcb0}
-.notif-amber{background:var(--amber-dim);border-color:var(--amber);color:#ffd080}
-
-/* ─── DUR BARS ─── */
-.dur-row{display:flex;align-items:center;gap:11px;margin-bottom:11px;font-size:12px}
-.dur-day-lbl{width:82px;color:var(--text2);flex-shrink:0;font-size:11px;font-weight:600}
-.dur-bar-wrap{flex:1;display:flex;gap:2px;height:24px;align-items:stretch;border-radius:5px;overflow:hidden}
-.dur-seg{display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,.9);font-weight:600;font-family:var(--mono)}
-.seg-isinma{background:#2563eb}.seg-kardio{background:#dc2626}.seg-guc{background:#1d4ed8}.seg-dinlenme{background:#059669}
-.dur-total-lbl{width:42px;text-align:right;font-weight:600;font-family:var(--mono);font-size:12px}
-.legend-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:13px}
-.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);font-weight:500}
-.leg-dot{width:8px;height:8px;border-radius:2px}
-
-/* ══════════════════════════════════════════
-   HAREKET KARTLARI — gerçek fotoğraf + canlı
-   ══════════════════════════════════════════ */
-.moves-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+/* ══════════════════════════════════════════════
+   HAREKET KARTLARI — Screenshot stili
+══════════════════════════════════════════════ */
+.moves-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 
 .move-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  background:#0f111a;border:1px solid rgba(255,255,255,0.08);border-radius:12px;
   display:flex;flex-direction:column;overflow:hidden;
-  transition:border-color .2s,transform .18s,box-shadow .2s;cursor:pointer;
+  transition:border-color .2s,transform .18s,box-shadow .2s;
 }
-.move-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.4)}
-.move-card.move-done{border-color:rgba(46,204,135,.35);box-shadow:0 0 20px rgba(46,204,135,.08)}
+.move-card:hover{border-color:rgba(255,255,255,.16);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.5)}
+.move-card.done{border-color:rgba(46,204,135,.35);box-shadow:0 0 16px rgba(46,204,135,.07)}
 
-/* GÖRSEL ALANI */
-.move-card-img{
-  height:140px;background:var(--bg3);position:relative;overflow:hidden;border-bottom:1px solid var(--border);
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+/* Fotoğraf alanı — tam ekran dolduran, screenshot gibi */
+.mc-photo{
+  width:100%;height:148px;position:relative;overflow:hidden;flex-shrink:0;
+  background:#1a1d2a;
 }
-.move-card-img img{
-  width:100%;height:100%;object-fit:cover;filter:saturate(1.15) contrast(1.05);
-  transition:transform .3s,filter .3s;
+.mc-photo img{
+  width:100%;height:100%;object-fit:cover;
+  filter:saturate(1.1) contrast(1.05) brightness(.95);
+  transition:transform .35s ease,filter .35s;
 }
-.move-card:hover .move-card-img img{transform:scale(1.06);filter:saturate(1.3) contrast(1.1) brightness(1.05)}
-.move-card-img .img-fallback{
-  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
-  font-size:40px;background:var(--bg3);
-}
-
-/* RENK OVERLAY (günün rengi) */
-.move-card-img::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:50%;
-  background:linear-gradient(to top,var(--bg2),transparent);
+.move-card:hover .mc-photo img{transform:scale(1.06);filter:saturate(1.25) brightness(1.05)}
+/* gradient fade to card body */
+.mc-photo::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:55%;
+  background:linear-gradient(to top,#0f111a,transparent);
   pointer-events:none;
 }
-
-/* DONE OVERLAY */
-.move-done-overlay{
+.mc-photo .mc-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:42px}
+.mc-photo .mc-overlay{
   position:absolute;inset:0;background:rgba(46,204,135,.22);
   display:flex;align-items:center;justify-content:center;
-  font-size:40px;opacity:0;transition:opacity .25s;
-  backdrop-filter:blur(2px);z-index:2;
+  font-size:38px;opacity:0;transition:opacity .25s;
+  backdrop-filter:blur(2px);z-index:3;
 }
-.move-card.move-done .move-done-overlay{opacity:1}
-
-/* GÜN BADGEi (sol üst) */
-.move-day-badge{
-  position:absolute;top:8px;left:8px;z-index:3;
-  font-size:9px;font-weight:700;padding:3px 8px;border-radius:var(--radius-pill);
-  letter-spacing:.06em;text-transform:uppercase;
-  backdrop-filter:blur(6px);
+.move-card.done .mc-photo .mc-overlay{opacity:1}
+/* badge top-left */
+.mc-badge{
+  position:absolute;top:8px;left:8px;z-index:4;
+  font-size:8px;font-weight:700;padding:3px 8px;border-radius:var(--rpill);
+  text-transform:uppercase;letter-spacing:.07em;backdrop-filter:blur(8px);
 }
 
-.move-card-body{padding:13px 15px;flex:1;display:flex;flex-direction:column;gap:5px}
-.move-card-name{font-size:13px;font-weight:700;line-height:1.2;letter-spacing:-.01em}
-.move-card-kas{font-size:11px;color:var(--text3);font-weight:500;margin-top:1px}
-.move-card-stats{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
-.move-stat{
-  font-size:10px;font-weight:600;padding:3px 9px;border-radius:var(--radius-pill);
-  font-family:var(--mono);
-}
-.ms-blue{background:var(--blue-dim);color:var(--blue)}
-.ms-amber{background:var(--amber-dim);color:var(--amber)}
-.ms-gray{background:var(--bg4);color:var(--text3)}
-.ms-green{background:var(--green-dim);color:var(--green)}
-.move-card-form{
-  font-size:11px;color:var(--text3);line-height:1.45;
-  margin-top:6px;border-top:1px solid var(--border);padding-top:7px;font-weight:500;
-}
+/* body below photo */
+.mc-body{padding:11px 13px;display:flex;flex-direction:column;gap:4px;flex:1}
+.mc-name{font-size:13px;font-weight:700;letter-spacing:-.01em;line-height:1.2;color:var(--text)}
+.mc-kas{font-size:10px;color:var(--text3);font-weight:500;margin-top:1px}
+.mc-stats{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+.mst{font-size:9px;font-weight:600;padding:2px 8px;border-radius:var(--rpill);font-family:var(--mono)}
+.mst-b{background:rgba(91,156,246,.18);color:var(--blue)}
+.mst-a{background:rgba(255,179,64,.18);color:var(--amber)}
+.mst-g{background:rgba(255,255,255,.06);color:var(--text3)}
+.mst-gr{background:rgba(46,204,135,.18);color:var(--green)}
+.mc-form{font-size:10px;color:var(--text3);line-height:1.4;margin-top:6px;border-top:1px solid rgba(255,255,255,.05);padding-top:6px;font-weight:500}
 
-/* TİK BUTONU */
-.move-tick-btn{
-  display:flex;align-items:center;gap:9px;padding:10px 15px;
-  border-top:1px solid var(--border);
-  font-size:12px;font-weight:600;color:var(--text2);
+/* tick button row */
+.mc-tick{
+  display:flex;align-items:center;gap:9px;padding:10px 13px;
+  border-top:1px solid rgba(255,255,255,.05);
+  background:#0d0f16;font-size:11px;font-weight:600;color:var(--text2);
   transition:background .15s,color .15s;
-  background:var(--bg3);
 }
-.move-tick-btn:hover{background:var(--bg4);color:var(--text)}
-.move-card.move-done .move-tick-btn{background:var(--green-dim);color:var(--green)}
-.tick-circle{
-  width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;
-  transition:all .2s;
-}
-.move-card.move-done .tick-circle{
-  background:var(--green);border-color:var(--green);color:#fff;
-  box-shadow:0 0 10px var(--green-glow);
-}
+.mc-tick:hover{background:var(--bg3);color:var(--text)}
+.move-card.done .mc-tick{background:rgba(46,204,135,.1);color:var(--green)}
+.tick-o{width:19px;height:19px;border-radius:50%;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;transition:all .2s}
+.move-card.done .tick-o{background:var(--green);border-color:var(--green);color:#000;box-shadow:0 0 10px var(--gglow)}
 
-/* GÜN FİLTRE */
-.day-filter-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
-.day-filter-btn{
-  font-size:12px;font-weight:600;padding:7px 16px;
-  border:1px solid var(--border2);border-radius:var(--radius-pill);
-  background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .15s;
-}
-.day-filter-btn:hover{background:var(--bg4);color:var(--text)}
-.day-filter-btn.active{background:var(--blue-dim);color:var(--blue);box-shadow:0 0 0 1px var(--blue-glow)}
-.day-filter-btn.gun-done{background:var(--green-dim);color:var(--green);box-shadow:0 0 0 1px var(--green-glow)}
-.day-pct{font-size:9px;margin-left:4px;opacity:.75;font-family:var(--mono)}
+/* ── DAY FILTER ── */
+.df-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.df-btn{font-size:11px;font-weight:700;padding:6px 14px;border:1px solid rgba(255,255,255,.1);border-radius:var(--rpill);background:rgba(255,255,255,.04);color:var(--text2);transition:all .15s}
+.df-btn:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.df-btn.active{background:rgba(91,156,246,.18);color:var(--blue);border-color:rgba(91,156,246,.35)}
+.df-btn.gd{background:rgba(46,204,135,.15);color:var(--green);border-color:rgba(46,204,135,.35)}
+.dpct{font-size:9px;margin-left:3px;opacity:.7;font-family:var(--mono)}
 
-/* HAFTALİK HEDEF */
-.weekly-goal-banner{
-  border-radius:var(--radius);padding:18px 22px;margin-bottom:22px;
-  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
-  background:var(--bg2);border:1px solid var(--border);
-  position:relative;overflow:hidden;
-}
-.weekly-goal-banner::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--blue),var(--purple),transparent);
-}
-.wg-icon{font-size:30px;flex-shrink:0}
-.wg-body{flex:1;min-width:180px}
-.wg-title{font-size:15px;font-weight:700;margin-bottom:3px;letter-spacing:-.01em}
-.wg-sub{font-size:12px;color:var(--text2);font-weight:500}
-.wg-dots{display:flex;gap:6px;margin-top:10px}
-.wg-dot{
-  width:10px;height:10px;border-radius:50%;background:var(--bg4);
-  transition:background .3s,box-shadow .3s;
-}
-.wg-dot.done{background:var(--green);box-shadow:0 0 8px var(--green-glow)}
-.wg-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.wg-count{font-size:26px;font-weight:700;font-family:var(--mono)}
-.wg-track{width:160px;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden}
-.wg-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width .7s cubic-bezier(.4,0,.2,1)}
-.wg-fill.complete{background:linear-gradient(90deg,var(--green),var(--cyan))}
+/* ── WEEKLY GOAL ── */
+.wgb{border-radius:var(--r);padding:15px 18px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--bg2);border:1px solid var(--border);position:relative;overflow:hidden}
+.wgb::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blue),var(--purple),transparent)}
+.wgb-icon{font-size:24px;flex-shrink:0}
+.wgb-body{flex:1;min-width:140px}
+.wgb-title{font-size:13px;font-weight:700;margin-bottom:2px}
+.wgb-sub{font-size:11px;color:var(--text2);font-weight:500}
+.wgb-dots{display:flex;gap:5px;margin-top:7px}
+.wgb-dot{width:8px;height:8px;border-radius:50%;background:var(--bg4);transition:background .3s,box-shadow .3s}
+.wgb-dot.d{background:var(--green);box-shadow:0 0 6px var(--gglow)}
+.wgb-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.wgb-count{font-size:22px;font-weight:700;font-family:var(--mono)}
+.wgb-track{width:130px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.wgb-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width .7s cubic-bezier(.4,0,.2,1)}
+.wgb-fill.done{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.confetti-b{background:var(--gdim);border:1px solid rgba(46,204,135,.3);border-radius:var(--r);padding:15px 18px;margin-bottom:16px;font-size:14px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:10px}
 
-.confetti-banner{
-  background:var(--green-dim);border:1px solid rgba(46,204,135,.3);
-  border-radius:var(--radius);padding:18px 22px;margin-bottom:22px;
-  font-size:15px;font-weight:700;color:var(--green);
-  display:flex;align-items:center;gap:12px;letter-spacing:-.01em;
-  box-shadow:0 0 30px rgba(46,204,135,.1);
-}
+/* ── PROGRESS ── */
+.pw{margin-bottom:13px}.pw:last-child{margin-bottom:0}
+.pr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.pn{font-size:12px;color:var(--text2);font-weight:500}
+.pv{font-size:11px;font-weight:600;font-family:var(--mono)}
+.pt2{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.pf{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1)}
 
-/* ─── KİLO TABLE ─── */
-.kilo-history-table{width:100%;border-collapse:collapse;font-size:12px}
-.kilo-history-table th{text-align:left;padding:8px 12px;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border);background:var(--bg3)}
-.kilo-history-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle;font-weight:500}
-.kilo-history-table tr:last-child td{border-bottom:none}
-.kilo-history-table tr:hover td{background:var(--bg3)}
+/* ── CHECKLIST ── */
+.cl{display:flex;flex-direction:column;gap:5px}
+.ci{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:var(--rsm);border:1px solid var(--border);background:var(--bg3);cursor:pointer;transition:all .15s;font-size:12px;color:var(--text2);font-weight:500}
+.ci:hover{border-color:var(--border2);color:var(--text)}
+.ci.ck{background:var(--gdim);border-color:rgba(46,204,135,.3)}
+.ci.ck .cit{text-decoration:line-through;color:var(--text3)}
+.cb{width:17px;height:17px;border-radius:5px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green)}
+.ci.ck .cb{background:var(--gdim);border-color:rgba(46,204,135,.5)}
+
+/* ── INPUT / BTN ── */
+.ki-row{display:flex;gap:7px;margin-bottom:13px}
+.ki-row input,.olc-inp{padding:8px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rsm);color:var(--text);font-family:var(--mono);font-size:13px;outline:none;transition:border-color .15s}
+.ki-row input{flex:1}.ki-row input:focus,.olc-inp:focus{border-color:var(--blue)}
+.ki-row input::placeholder{color:var(--text3)}
+.btn{padding:8px 15px;background:linear-gradient(135deg,var(--blue),#3b7de0);color:#fff;border:none;border-radius:var(--rsm);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-g{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);background-image:none}
+.btn-g:hover{background:var(--bg4);color:var(--text)}
+.btn-gr{background:linear-gradient(135deg,var(--green),#1ca86a);color:#fff}
+
+/* ── KILO TABLE ── */
+.kht{width:100%;border-collapse:collapse;font-size:12px}
+.kht th{text-align:left;padding:8px 11px;font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.09em;border-bottom:1px solid var(--border);background:var(--bg3)}
+.kht td{padding:9px 11px;border-bottom:1px solid var(--border);color:var(--text2);font-weight:500}
+.kht tr:last-child td{border-bottom:none}
+.kht tr:hover td{background:var(--bg3)}
+
+/* ── DUR BARS ── */
+.dur-row{display:flex;align-items:center;gap:9px;margin-bottom:9px;font-size:12px}
+.dlbl{width:80px;color:var(--text2);flex-shrink:0;font-size:11px;font-weight:600}
+.dbar{flex:1;display:flex;gap:2px;height:21px;align-items:stretch;border-radius:4px;overflow:hidden}
+.ds{display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(255,255,255,.9);font-weight:600;font-family:var(--mono)}
+.si{background:#2563eb}.sk{background:#dc2626}.sg{background:#1d4ed8}.sd{background:#059669}
+.dtot{width:38px;text-align:right;font-weight:600;font-family:var(--mono);font-size:11px}
+.leg{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:11px}
+.li{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);font-weight:500}
+.ld{width:7px;height:7px;border-radius:2px}
+
+/* ── HEDEFLER ── */
+.olcum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:13px}
+.olcum-item label{display:block;font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.olcum-item input{width:100%}
+
+/* ── NOTIF ── */
+.notif{display:flex;align-items:flex-start;gap:9px;padding:11px 14px;border-radius:var(--rsm);border-left:3px solid;margin-bottom:8px;font-size:12px;font-weight:500;line-height:1.5}
+.nb{background:var(--bdim);border-color:var(--blue);color:#93bbf9}
+.ng{background:var(--gdim);border-color:var(--green);color:#6fdcb0}
+.na{background:var(--adim);border-color:var(--amber);color:#ffd080}
+
+/* ══════════════════════════════════════════════
+   MOBILE
+══════════════════════════════════════════════ */
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr;padding-bottom:var(--nav-h)}
+  .sidebar{display:none}
+  .main{padding:14px 12px 20px}
+  .mobile-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:100;
+    background:rgba(13,15,22,.95);border-top:1px solid var(--border);
+    height:var(--nav-h);align-items:stretch;
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  }
+  .mn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;color:var(--text2);font-size:9px;font-weight:600;padding:5px 2px;transition:color .15s;position:relative}
+  .mn-item.active{color:var(--blue)}
+  .mn-item.active .mn-ico{background:var(--bdim);border-radius:9px}
+  .mn-ico{font-size:18px;width:34px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:background .15s}
+  .mn-badge{position:absolute;top:5px;right:calc(50% - 22px);background:var(--green);color:#000;font-size:8px;font-weight:700;padding:1px 5px;border-radius:var(--rpill);min-width:14px;text-align:center}
+
+  .mrow{grid-template-columns:repeat(2,1fr)}
+  .g2,.g3{grid-template-columns:1fr}.span2{grid-column:span 1}
+  .moves-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .mc-photo{height:110px}
+  .cal-days,.cal-weekdays{gap:3px}
+  .wgb{flex-direction:column;gap:10px}
+  .wgb-right{flex-direction:row;align-items:center;gap:10px;width:100%}.wgb-track{flex:1}
+  .pt{font-size:18px}
+  .cal-day{border-radius:6px}
+  .olcum-grid{grid-template-columns:repeat(2,1fr)}
+  .ws-day{min-height:75px}
+  .mc-photo{height:120px}
+}
+@media(max-width:400px){
+  .moves-grid{grid-template-columns:1fr 1fr}
+  .mrow{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
 <div class="layout">
 
-<!-- ─── SIDEBAR ─── -->
+<!-- ── SIDEBAR ── -->
 <aside class="sidebar">
-  <div class="sidebar-brand">
-    <div class="brand-logo">🏋️</div>
-    <div class="brand-name">FitDash</div>
-    <div class="brand-sub">Maslak 1453 MacFit</div>
+  <div class="sb-brand">
+    <div class="logo-row">
+      <svg class="logo-svg" viewBox="0 0 42 42" fill="none">
+        <rect width="42" height="42" rx="11" fill="url(#lgg)"/>
+        <defs><linearGradient id="lgg" x1="0" y1="0" x2="42" y2="42"><stop stop-color="#5b9cf6"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+        <rect x="5" y="19" width="32" height="4" rx="2" fill="white" opacity=".9"/>
+        <rect x="5" y="16" width="6" height="10" rx="2" fill="white"/>
+        <rect x="31" y="16" width="6" height="10" rx="2" fill="white"/>
+        <rect x="9" y="14" width="3" height="14" rx="1.5" fill="white" opacity=".65"/>
+        <rect x="30" y="14" width="3" height="14" rx="1.5" fill="white" opacity=".65"/>
+      </svg>
+      <div><div class="brand-name">ASAR</div><div class="brand-tag">Fitness</div></div>
+    </div>
   </div>
-  <div class="nav-section">
-    <div class="nav-label">Genel</div>
-    <button class="nav-item active" onclick="navTo('anasayfa',this)"><span class="nav-icon">📊</span>Anasayfa</button>
-    <button class="nav-item" onclick="navTo('program',this)"><span class="nav-icon">📅</span>Haftalık Program</button>
-    <button class="nav-item" onclick="navTo('hareketler',this)">
-      <span class="nav-icon">💪</span>Hareket Listesi
-      <span class="nav-badge" id="navBadge" style="display:none">0/4</span>
-    </button>
+  <div class="sb-sub">Maslak 1453 MacFit</div>
+  <div style="padding:0 8px">
+    <div class="nav-lbl">Genel</div>
+    <button class="ni active" onclick="navTo('anasayfa',this)"><span class="ni-ico">📊</span>Anasayfa</button>
+    <button class="ni" onclick="navTo('program',this)"><span class="ni-ico">📅</span>Haftalık Program</button>
+    <button class="ni" onclick="navTo('hareketler',this)"><span class="ni-ico">💪</span>Hareket Listesi<span class="ni-badge" id="navBadge" style="display:none">0/4</span></button>
+    <div class="nav-lbl">Takip</div>
+    <button class="ni" onclick="navTo('kilo',this)"><span class="ni-ico">⚖️</span>Kilo Takibi</button>
+    <button class="ni" onclick="navTo('sureler',this)"><span class="ni-ico">⏱️</span>Süre Dökümü</button>
+    <button class="ni" onclick="navTo('hedefler',this)"><span class="ni-ico">🎯</span>Hedefler</button>
   </div>
-  <div class="nav-section">
-    <div class="nav-label">Takip</div>
-    <button class="nav-item" onclick="navTo('kilo',this)"><span class="nav-icon">⚖️</span>Kilo Takibi</button>
-    <button class="nav-item" onclick="navTo('sureler',this)"><span class="nav-icon">⏱️</span>Süre Dökümü</button>
-    <button class="nav-item" onclick="navTo('hedefler',this)"><span class="nav-icon">🎯</span>Nisan Hedefleri</button>
-  </div>
-  <div class="sidebar-bottom">
-    <div class="sidebar-stat-label">Profil</div>
-    <div class="profile-row">
+  <div class="sb-bottom">
+    <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px">Profil</div>
+    <div class="avatar-row">
       <div class="avatar">ST</div>
-      <div><div class="profile-name">1.80m · 90 kg</div><div class="profile-detail">Hedef: 87 kg · Nisan</div></div>
+      <div><div style="font-size:13px;font-weight:600">1.80m · 92 kg</div><div style="font-size:11px;color:var(--text3)">Hedef: 80 kg</div></div>
     </div>
   </div>
 </aside>
 
-<!-- ─── MAIN ─── -->
+<!-- ── MOBILE NAV ── -->
+<nav class="mobile-nav">
+  <button class="mn-item active" onclick="navTo('anasayfa',this,1)"><div class="mn-ico">📊</div>Ana</button>
+  <button class="mn-item" onclick="navTo('program',this,1)"><div class="mn-ico">📅</div>Program</button>
+  <button class="mn-item" onclick="navTo('hareketler',this,1)"><div class="mn-ico">💪</div>Hareketler<span class="mn-badge" id="mnBadge" style="display:none">0</span></button>
+  <button class="mn-item" onclick="navTo('kilo',this,1)"><div class="mn-ico">⚖️</div>Kilo</button>
+  <button class="mn-item" onclick="navTo('hedefler',this,1)"><div class="mn-ico">🎯</div>Hedef</button>
+</nav>
+
 <main class="main">
 
-<!-- ANASAYFA -->
+<!-- ══ ANASAYFA ══ -->
 <div class="page active" id="page-anasayfa">
-  <div class="page-header">
-    <div><div class="page-title">Genel Bakış</div><div class="page-sub" id="todaySub">Nisan 2025 · Maslak 1453 MacFit</div></div>
-    <div class="today-badge" id="todayBadge">Yükleniyor...</div>
-  </div>
-  <div class="metrics-row">
-    <div class="metric-card mc-red">
-      <div class="metric-label">Mevcut Kilo</div>
-      <div><span class="metric-val" id="m-kilo">90.0</span><span class="metric-unit">kg</span></div>
-      <div class="metric-delta" id="m-kilo-delta"><span class="delta-neg">Hedefe 3 kg kaldı</span></div>
-    </div>
-    <div class="metric-card mc-blue">
-      <div class="metric-label">Bu Hafta Antrenman</div>
-      <div><span class="metric-val" id="m-week">0</span><span class="metric-unit">/ 4 gün</span></div>
-      <div class="metric-delta"><span class="delta-neutral" id="m-week-pct">%0 tamamlandı</span></div>
-    </div>
-    <div class="metric-card mc-green">
-      <div class="metric-label">Nisan İlerlemesi</div>
-      <div><span class="metric-val" id="m-nisan-pct">0</span><span class="metric-unit">%</span></div>
-      <div class="metric-delta"><span class="delta-neutral" id="m-nisan-gun">0 / 30 gün</span></div>
-    </div>
-    <div class="metric-card mc-amber">
-      <div class="metric-label">Haftalık Süre</div>
-      <div><span class="metric-val">330</span><span class="metric-unit">dk</span></div>
-      <div class="metric-delta"><span class="delta-neutral">~5.5 saat / hafta</span></div>
-    </div>
+  <div class="ph">
+    <div><div class="pt">Genel Bakış</div><div class="ps" id="todaySub"></div></div>
+    <div class="tbadge" id="todayBadge">…</div>
   </div>
 
-  <div class="card" style="margin-bottom:14px">
-    <div class="card-title"><span class="card-title-accent" style="background:linear-gradient(var(--blue),var(--purple))"></span>Haftalık Program — Tıklayarak İşaretle</div>
-    <div class="week-grid" id="weekGrid"></div>
+  <!-- 4 metrik kart -->
+  <div class="mrow" style="margin-bottom:18px">
+    <div class="mc mr"><div class="ml">Mevcut Kilo</div><div><span class="mv" id="m-kilo">92.0</span><span class="mu">kg</span></div><div class="md" id="m-kilo-d"><span class="dn">Hedefe 12 kg kaldı</span></div></div>
+    <div class="mc mb"><div class="ml">Bu Hafta</div><div><span class="mv" id="m-week">0</span><span class="mu">/ 4 gün</span></div><div class="md"><span class="dn2" id="m-week-p">%0 tamamlandı</span></div></div>
+    <div class="mc mg"><div class="ml">Bu Ay Seans</div><div><span class="mv" id="m-seans">0</span><span class="mu">seans</span></div><div class="md"><span class="dn2">hedef: 16/ay</span></div></div>
+    <div class="mc ma"><div class="ml">Toplam Seans</div><div><span class="mv" id="m-total">0</span><span class="mu">seans</span></div><div class="md"><span class="dn2" id="m-total-kg">0 kg yakıldı</span></div></div>
   </div>
 
-  <div class="grid-3">
-    <div class="card col-span-2">
-      <div class="card-title"><span class="card-title-accent" style="background:linear-gradient(var(--green),var(--cyan))"></span>Nisan Hedef İlerlemesi</div>
-      <div class="prog-wrap"><div class="prog-row"><span class="prog-name">Kilo kaybı hedefi (−3 kg)</span><span class="prog-val" id="ph-kilo">0 / 3 kg</span></div><div class="prog-track"><div class="prog-fill" id="pf-kilo" style="width:0%;background:linear-gradient(90deg,var(--red),var(--amber))"></div></div></div>
-      <div class="prog-wrap"><div class="prog-row"><span class="prog-name">Haftalık antrenman (4 gün)</span><span class="prog-val" id="ph-ant">0 / 4</span></div><div class="prog-track"><div class="prog-fill" id="pf-ant" style="width:0%;background:linear-gradient(90deg,var(--blue),var(--purple))"></div></div></div>
-      <div class="prog-wrap"><div class="prog-row"><span class="prog-name">Nisan ayı (30 gün)</span><span class="prog-val" id="ph-ay">0 / 30</span></div><div class="prog-track"><div class="prog-fill" id="pf-ay" style="width:0%;background:linear-gradient(90deg,var(--green),var(--cyan))"></div></div></div>
-      <div class="prog-wrap"><div class="prog-row"><span class="prog-name">Kümülatif antrenman süresi</span><span class="prog-val" id="ph-saat">0 / 22 saat</span></div><div class="prog-track"><div class="prog-fill" id="pf-saat" style="width:0%;background:linear-gradient(90deg,var(--amber),var(--red))"></div></div></div>
+  <!-- Özet satırı: 2 kolon -->
+  <div class="g2" style="margin-bottom:14px">
+
+    <!-- Sol: Hedef İlerlemesi + Bugünün listesi -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="card">
+        <div class="ct"><span class="ca" style="background:linear-gradient(var(--green),var(--cyan))"></span>Hedef İlerlemesi</div>
+        <div class="pw">
+          <div class="pr"><span class="pn">⚖️ Kilo (92 → 80 kg)</span><span class="pv" id="ph-kilo">0 / 12 kg</span></div>
+          <div class="pt2"><div class="pf" id="pf-kilo" style="width:0%;background:linear-gradient(90deg,var(--red),var(--amber))"></div></div>
+        </div>
+        <div class="pw">
+          <div class="pr"><span class="pn">💪 Bu ay antrenman</span><span class="pv" id="ph-ant">0 / 16</span></div>
+          <div class="pt2"><div class="pf" id="pf-ant" style="width:0%;background:linear-gradient(90deg,var(--blue),var(--purple))"></div></div>
+        </div>
+        <div class="pw" style="margin-bottom:0">
+          <div class="pr"><span class="pn">🔥 Toplam seans (2026)</span><span class="pv" id="ph-toplam">0 seans</span></div>
+          <div class="pt2"><div class="pf" id="pf-toplam" style="width:0%;background:linear-gradient(90deg,var(--amber),var(--red))"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ct"><span class="ca" style="background:linear-gradient(var(--amber),var(--red))"></span>Bugünün Programı</div>
+        <div class="cl" id="todayChecklist"></div>
+      </div>
     </div>
+
+    <!-- Sağ: Bu haftanın özet tablosu -->
     <div class="card">
-      <div class="card-title"><span class="card-title-accent" style="background:linear-gradient(var(--amber),var(--red))"></span>Bugünün Listesi</div>
-      <div class="check-list" id="todayChecklist"></div>
+      <div class="ct"><span class="ca" style="background:linear-gradient(var(--blue),var(--purple))"></span>Bu Hafta Özeti</div>
+      <div id="weekSummaryTable"></div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div class="ct" style="margin-bottom:10px"><span class="ca" style="background:linear-gradient(var(--green),var(--cyan))"></span>Son 6 Ay Aktivite</div>
+        <div style="position:relative;height:110px"><canvas id="homeActivityChart"></canvas></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Antrenman saati & notlar satırı -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="ct"><span class="ca" style="background:linear-gradient(var(--purple),var(--blue))"></span>Hızlı Bakış</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      <div style="text-align:center;padding:10px 6px;background:var(--bg3);border-radius:var(--rsm);border:1px solid var(--border)">
+        <div style="font-size:18px;margin-bottom:4px">💪</div>
+        <div style="font-size:10px;font-weight:700;color:var(--blue)">PAZARTESİ</div>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px">Üst Vücut · 76dk</div>
+      </div>
+      <div style="text-align:center;padding:10px 6px;background:var(--bg3);border-radius:var(--rsm);border:1px solid var(--border)">
+        <div style="font-size:18px;margin-bottom:4px">🦵</div>
+        <div style="font-size:10px;font-weight:700;color:var(--green)">ÇARŞAMBA</div>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px">Alt Vücut · 80dk</div>
+      </div>
+      <div style="text-align:center;padding:10px 6px;background:var(--bg3);border-radius:var(--rsm);border:1px solid var(--border)">
+        <div style="font-size:18px;margin-bottom:4px">🔥</div>
+        <div style="font-size:10px;font-weight:700;color:var(--red)">CUMA</div>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px">Core & HIIT · 66dk</div>
+      </div>
+      <div style="text-align:center;padding:10px 6px;background:var(--bg3);border-radius:var(--rsm);border:1px solid var(--border)">
+        <div style="font-size:18px;margin-bottom:4px">🚣</div>
+        <div style="font-size:10px;font-weight:700;color:var(--amber)">CUMARTESİ</div>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px">Kürek · 58dk</div>
+      </div>
     </div>
   </div>
 
-  <div class="notif notif-amber">⚠️ Salı &amp; Perşembe 21:00–23:00 ihracat eğitimi — bu günlere antrenman konulmamıştır.</div>
-  <div class="notif notif-green">🚣 Cumartesi kürek (rowing) antremanın devam ediyor — mükemmel tüm vücut çalışması!</div>
-  <div class="notif notif-blue">⏰ Antrenman saatleri: Sabah 07:00–08:10 VEYA Akşam 20:00–21:10</div>
+  <div class="notif na">⚠️ Salı &amp; Perşembe 21:00–23:00 ihracat eğitimi — antrenman yok</div>
+  <div class="notif nb">⏰ Antrenman saati: Sabah 07:00–08:10 · Akşam 20:00–21:10</div>
+  <div class="notif ng">🚣 Cumartesi kürek devam ediyor · <strong style="cursor:pointer;text-decoration:underline" onclick="navTo('program',document.querySelectorAll('.ni')[1])">→ Programa git</strong></div>
 </div>
 
-<!-- PROGRAM -->
+<!-- ══ PROGRAM ══ -->
 <div class="page" id="page-program">
-  <div class="page-header"><div><div class="page-title">Haftalık Program</div><div class="page-sub">Nisan 2025 — 4 antrenman günü / hafta</div></div></div>
+  <div class="ph"><div><div class="pt">Haftalık Program</div><div class="ps" id="programWeekLabel">4 antrenman günü / hafta</div></div></div>
+  <div class="cal-picker" style="margin-bottom:14px">
+    <div class="cal-header">
+      <div class="cal-title" id="calTitle2">Mart 2026</div>
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="shiftCalMonth(-1)">‹</button>
+        <button class="cal-nav-btn" onclick="shiftCalMonth(0)">·</button>
+        <button class="cal-nav-btn" onclick="shiftCalMonth(1)">›</button>
+      </div>
+    </div>
+    <div class="cal-weekdays" id="calWeekdays2"></div>
+    <div id="calDays2"></div>
+    <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
+      <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:9px" id="weekStripLabel2">Seçili Hafta</div>
+      <div class="cal-week-strip" id="weekStripDays2"></div>
+    </div>
+  </div>
   <div id="programAccordion"></div>
 </div>
 
-<!-- HAREKET LİSTESİ -->
+<!-- ══ HAREKETLER ══ -->
 <div class="page" id="page-hareketler">
-  <div class="page-header"><div><div class="page-title">Hareket Listesi</div><div class="page-sub">Tamamlayınca tikle — günü bitirince haftalık hedefe sayılır</div></div></div>
+  <div class="ph"><div><div class="pt">Hareket Listesi</div><div class="ps" id="movesDateLabel">Bugün</div></div></div>
   <div id="weeklyGoalBanner"></div>
-  <div class="day-filter-row" id="hareketFilter"></div>
+  <div class="df-row" id="hareketFilter"></div>
   <div class="moves-grid" id="movesGrid"></div>
 </div>
 
-<!-- KİLO -->
+<!-- ══ KİLO ══ -->
 <div class="page" id="page-kilo">
-  <div class="page-header"><div><div class="page-title">Kilo Takibi</div><div class="page-sub">Başlangıç: 90 kg · Hedef: 87 kg · Süre: Nisan</div></div></div>
-  <div class="grid-2" style="margin-bottom:14px">
-    <div class="metric-card mc-red"><div class="metric-label">Mevcut Kilo</div><div><span class="metric-val" id="kp-mevcut">90.0</span><span class="metric-unit">kg</span></div><div class="metric-delta" id="kp-delta"><span class="delta-neg">Hedefe 3.0 kg kaldı</span></div></div>
-    <div class="metric-card mc-green"><div class="metric-label">Toplam Kayıp</div><div><span class="metric-val" id="kp-kayip">0.0</span><span class="metric-unit">kg</span></div><div class="metric-delta"><span class="delta-neutral" id="kp-kayip-pct">%0 hedef tamamlandı</span></div></div>
+  <div class="ph"><div><div class="pt">Kilo Takibi</div><div class="ps">Başlangıç: 92 kg · Hedef: 80 kg</div></div></div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="mc mr"><div class="ml">Mevcut</div><div><span class="mv" id="kp-mevcut">92.0</span><span class="mu">kg</span></div><div class="md" id="kp-d"><span class="dn">Hedefe 12 kg</span></div></div>
+    <div class="mc mg"><div class="ml">Toplam Kayıp</div><div><span class="mv" id="kp-kayip">0.0</span><span class="mu">kg</span></div><div class="md"><span class="dn2" id="kp-pct">%0 hedef</span></div></div>
   </div>
-  <div class="card" style="margin-bottom:14px">
-    <div class="card-title">Kilo Girişi</div>
-    <div class="kilo-input-row"><input type="number" id="kiloInput" step="0.1" min="70" max="130" placeholder="Kilo gir (örn: 89.5)"><button class="btn" onclick="addKiloEntry()">Kaydet</button><button class="btn btn-ghost" onclick="clearKiloData()">Temizle</button></div>
-    <div style="position:relative;height:260px"><canvas id="kiloChart"></canvas></div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="ct">Kilo Girişi</div>
+    <div class="ki-row"><input type="number" id="kiloInput" step="0.1" min="60" max="150" placeholder="Kilo gir (örn: 91.5)"><button class="btn" onclick="addKilo()">Kaydet</button><button class="btn btn-g" onclick="clearKilo()">Temizle</button></div>
+    <div style="position:relative;height:230px"><canvas id="kiloChart"></canvas></div>
   </div>
-  <div class="card"><div class="card-title">Kayıt Geçmişi</div><table class="kilo-history-table"><thead><tr><th>Tarih</th><th>Kilo (kg)</th><th>Değişim</th></tr></thead><tbody id="kiloHistoryBody"></tbody></table></div>
+  <div class="card"><div class="ct">Geçmiş</div><table class="kht"><thead><tr><th>Tarih</th><th>Kilo</th><th>Değişim</th></tr></thead><tbody id="kiloHistoryBody"></tbody></table></div>
 </div>
 
-<!-- SURELER -->
+<!-- ══ SURELER ══ -->
 <div class="page" id="page-sureler">
-  <div class="page-header"><div><div class="page-title">Süre Dökümü</div><div class="page-sub">Günlük antrenman süresi — dakika bazlı</div></div></div>
-  <div class="metrics-row">
-    <div class="metric-card"><div class="metric-label">Pazartesi</div><div class="metric-val">76<span class="metric-unit" style="font-size:13px">dk</span></div></div>
-    <div class="metric-card"><div class="metric-label">Çarşamba</div><div class="metric-val">80<span class="metric-unit" style="font-size:13px">dk</span></div></div>
-    <div class="metric-card"><div class="metric-label">Cuma</div><div class="metric-val">66<span class="metric-unit" style="font-size:13px">dk</span></div></div>
-    <div class="metric-card"><div class="metric-label">Cumartesi</div><div class="metric-val">58<span class="metric-unit" style="font-size:13px">dk</span></div></div>
+  <div class="ph"><div><div class="pt">Süre Dökümü</div><div class="ps">Günlük antrenman planı</div></div></div>
+  <div class="mrow">
+    <div class="mc"><div class="ml">Pazartesi</div><div class="mv">76<span class="mu" style="font-size:11px">dk</span></div></div>
+    <div class="mc"><div class="ml">Çarşamba</div><div class="mv">80<span class="mu" style="font-size:11px">dk</span></div></div>
+    <div class="mc"><div class="ml">Cuma</div><div class="mv">66<span class="mu" style="font-size:11px">dk</span></div></div>
+    <div class="mc"><div class="ml">Cumartesi</div><div class="mv">58<span class="mu" style="font-size:11px">dk</span></div></div>
   </div>
-  <div class="card" style="margin-bottom:14px">
-    <div class="card-title"><span class="card-title-accent" style="background:linear-gradient(var(--blue),var(--cyan))"></span>Günlük Süre Dağılımı</div>
-    <div class="legend-row"><span class="leg-item"><span class="leg-dot" style="background:#2563eb"></span>Isınma</span><span class="leg-item"><span class="leg-dot" style="background:#dc2626"></span>Kardio</span><span class="leg-item"><span class="leg-dot" style="background:#1d4ed8"></span>Güç</span><span class="leg-item"><span class="leg-dot" style="background:#059669"></span>Dinlenme</span></div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="ct"><span class="ca" style="background:linear-gradient(var(--blue),var(--cyan))"></span>Günlük Dağılım</div>
+    <div class="leg"><span class="li"><span class="ld" style="background:#2563eb"></span>Isınma</span><span class="li"><span class="ld" style="background:#dc2626"></span>Kardio</span><span class="li"><span class="ld" style="background:#1d4ed8"></span>Güç</span><span class="li"><span class="ld" style="background:#059669"></span>Dinlenme</span></div>
     <div id="durBars"></div>
   </div>
-  <div class="card"><div class="card-title"><span class="card-title-accent" style="background:linear-gradient(var(--amber),var(--red))"></span>Haftalık Süre Grafiği</div><div style="position:relative;height:220px"><canvas id="surelerChart"></canvas></div></div>
+  <div class="card"><div class="ct"><span class="ca" style="background:linear-gradient(var(--amber),var(--red))"></span>Haftalık Grafik</div><div style="position:relative;height:190px"><canvas id="surelerChart"></canvas></div></div>
 </div>
 
-<!-- HEDEFLER -->
+<!-- ══ HEDEFLER ══ -->
 <div class="page" id="page-hedefler">
-  <div class="page-header"><div><div class="page-title">Nisan Hedefleri</div><div class="page-sub">Yaz öncesi 4 haftalık dönüşüm planı</div></div></div>
-  <div class="grid-2" style="margin-bottom:14px">
-    <div class="card"><div class="card-title"><span class="card-title-accent" style="background:linear-gradient(var(--red),var(--amber))"></span>Kilo Hedefi</div><div class="prog-wrap"><div class="prog-row"><span class="prog-name">90 kg → 87 kg (−3 kg yağ)</span><span class="prog-val" id="hp-kilo">0 / 3 kg</span></div><div class="prog-track"><div class="prog-fill" id="hpf-kilo" style="width:0%;background:linear-gradient(90deg,var(--red),var(--amber))"></div></div></div><div style="font-size:12px;color:var(--text3);margin-top:10px;font-weight:500">Sağlıklı hız: 0.5–1 kg/hafta. Kalıcı ve güvenli hedef.</div></div>
-    <div class="card"><div class="card-title"><span class="card-title-accent" style="background:linear-gradient(var(--blue),var(--purple))"></span>Antrenman Hedefi</div><div class="prog-wrap"><div class="prog-row"><span class="prog-name">16 seans (4 gün × 4 hafta)</span><span class="prog-val" id="hp-ant">0 / 16</span></div><div class="prog-track"><div class="prog-fill" id="hpf-ant" style="width:0%;background:linear-gradient(90deg,var(--blue),var(--purple))"></div></div></div><div style="font-size:12px;color:var(--text3);margin-top:10px;font-weight:500">Her seans işaretlenince otomatik güncellenir.</div></div>
+  <div class="ph"><div><div class="pt">Hedefler</div><div class="ps">Uzun vadeli yıllık takip</div></div></div>
+
+  <!-- AY SEÇİCİ -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="ct"><span class="ca" style="background:linear-gradient(var(--blue),var(--purple))"></span>Ay Seçin</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap" id="goalMonthPills"></div>
   </div>
-  <div class="card" style="margin-bottom:14px">
-    <div class="card-title"><span class="card-title-accent" style="background:linear-gradient(var(--amber),var(--red))"></span>Ölçüm Takibi (cm)</div>
-    <div id="olcumForm" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px"></div>
-    <button class="btn" onclick="saveOlcum()">Ölçümleri Kaydet</button>
-  </div>
-  <div class="card">
-    <div class="card-title"><span class="card-title-accent" style="background:linear-gradient(var(--green),var(--cyan))"></span>Hedef Takvimi</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;text-align:center"><div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Hafta 1</div><div style="font-size:15px;font-weight:700;color:var(--blue)">−0.75 kg</div><div style="font-size:11px;color:var(--text3);margin-top:5px;font-weight:500">Adaptasyon</div></div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;text-align:center"><div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Hafta 2</div><div style="font-size:15px;font-weight:700;color:var(--green)">−0.75 kg</div><div style="font-size:11px;color:var(--text3);margin-top:5px;font-weight:500">Ritim kurma</div></div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;text-align:center"><div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Hafta 3</div><div style="font-size:15px;font-weight:700;color:var(--amber)">−0.75 kg</div><div style="font-size:11px;color:var(--text3);margin-top:5px;font-weight:500">Momentum</div></div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;text-align:center"><div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Hafta 4</div><div style="font-size:15px;font-weight:700;color:var(--red)">−0.75 kg</div><div style="font-size:11px;color:var(--text3);margin-top:5px;font-weight:500">Final push</div></div>
+
+  <div class="g2" style="margin-bottom:12px">
+    <div class="card">
+      <div class="ct"><span class="ca" style="background:linear-gradient(var(--red),var(--amber))"></span>Kilo Hedefi</div>
+      <div class="pw"><div class="pr"><span class="pn">92 kg → 80 kg (−12 kg)</span><span class="pv" id="hp-kilo2">0 / 12 kg</span></div><div class="pt2"><div class="pf" id="hpf-kilo" style="width:0%;background:linear-gradient(90deg,var(--red),var(--amber))"></div></div></div>
+      <div style="font-size:11px;color:var(--text3);margin-top:8px;font-weight:500">Sağlıklı hız: 0.5–1 kg/hafta</div>
     </div>
+    <div class="card">
+      <div class="ct"><span class="ca" style="background:linear-gradient(var(--blue),var(--purple))"></span>Antrenman <span style="font-size:11px;color:var(--text3);font-weight:500;margin-left:3px" id="goalMonthName"></span></div>
+      <div class="pw"><div class="pr"><span class="pn">Seans (hedef 16/ay)</span><span class="pv" id="hp-ant2">0 / 16</span></div><div class="pt2"><div class="pf" id="hpf-ant" style="width:0%;background:linear-gradient(90deg,var(--blue),var(--purple))"></div></div></div>
+      <div style="font-size:11px;color:var(--text3);margin-top:8px;font-weight:500">Seçili aya ait kayıtlar</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="ct"><span class="ca" style="background:linear-gradient(var(--amber),var(--red))"></span>Ölçüm Takibi — <span style="font-weight:500;color:var(--text3)" id="olcumAyAd"></span></div>
+    <div class="olcum-grid" id="olcumForm"></div>
+    <button class="btn" onclick="saveOlcum()">Kaydet</button>
+  </div>
+
+  <div class="card">
+    <div class="ct"><span class="ca" style="background:linear-gradient(var(--green),var(--cyan))"></span>Aylık Aktivite Özeti (2026)</div>
+    <div style="position:relative;height:185px"><canvas id="monthlyChart"></canvas></div>
   </div>
 </div>
 
@@ -519,233 +560,438 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </div>
 
 <script>
-/* ══════════════════════════════════════════════════════════════
-   GERÇEK GÖRSEL URLLERİ
-   Kaynak: github.com/yuhonas/free-exercise-db (Public Domain)
-   ══════════════════════════════════════════════════════════════ */
-const BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
-
-const EXERCISE_IMGS = {
-  "Bench Press":                   BASE + "Barbell_Bench_Press_-_Medium_Grip/0.jpg",
-  "İncline Dumbbell Press":        BASE + "Incline_Dumbbell_Press/0.jpg",
-  "Lat Pulldown":                  BASE + "Wide-Grip_Lat_Pulldown/0.jpg",
-  "Seated Cable Row":              BASE + "Seated_Cable_Rows/0.jpg",
-  "Shoulder Press":                BASE + "Barbell_Shoulder_Press/0.jpg",
-  "Lateral Raise":                 BASE + "Side_Lateral_Raise/0.jpg",
-  "Tricep Pushdown":               BASE + "Triceps_Pushdown/0.jpg",
-  "Bicep Curl":                    BASE + "Barbell_Curl/0.jpg",
-  "Squat":                         BASE + "Barbell_Full_Squat/0.jpg",
-  "Leg Press":                     BASE + "Leg_Press/0.jpg",
-  "Romanian Deadlift":             BASE + "Romanian_Deadlift/0.jpg",
-  "Leg Curl":                      BASE + "Lying_Leg_Curls/0.jpg",
-  "Leg Extension":                 BASE + "Leg_Extensions/0.jpg",
-  "Calf Raise":                    BASE + "Standing_Calf_Raises/0.jpg",
-  "Hip Thrust":                    BASE + "Barbell_Hip_Thrust/0.jpg",
-  "HIIT – Koşu Bandı":             BASE + "Treadmill_Run/0.jpg",
-  "Plank":                         BASE + "Plank/0.jpg",
-  "Crunch (Makina)":               BASE + "Machine_Crunch/0.jpg",
-  "Russian Twist":                 BASE + "Russian_Twist/0.jpg",
-  "Cable Crunch":                  BASE + "Cable_Crunch/0.jpg",
-  "Leg Raise (Yatay)":             BASE + "Flat_Bench_Lying_Leg_Raise/0.jpg",
-  "Ab Rollout":                    BASE + "Ab_Roller/0.jpg",
-  "Rowing Makinesi":               BASE + "Rowing__Stationary/0.jpg",
-  "Lat Pulldown (Finişer)":        BASE + "Wide-Grip_Lat_Pulldown/1.jpg",
+/* ═══════════════════════════════════════════════════════
+   VERİ
+═══════════════════════════════════════════════════════ */
+// Kaynak: yuhonas/free-exercise-db — Public Domain
+// URL: https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/KLASOR/0.jpg
+const GH = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+const IMGS = {
+  "Bench Press":            GH+"Barbell_Bench_Press_-_Medium_Grip/0.jpg",
+  "İncline Dumbbell Press": GH+"Incline_Dumbbell_Press/0.jpg",
+  "Lat Pulldown":           GH+"Wide-Grip_Lat_Pulldown/0.jpg",
+  "Seated Cable Row":       GH+"Seated_Cable_Rows/0.jpg",
+  "Shoulder Press":         GH+"Barbell_Shoulder_Press/0.jpg",
+  "Lateral Raise":          GH+"Side_Lateral_Raise/0.jpg",
+  "Tricep Pushdown":        GH+"Triceps_Pushdown/0.jpg",
+  "Bicep Curl":             GH+"Barbell_Curl/0.jpg",
+  "Squat":                  GH+"Barbell_Full_Squat/0.jpg",
+  "Leg Press":              GH+"Leg_Press/0.jpg",
+  "Romanian Deadlift":      GH+"Romanian_Deadlift/0.jpg",
+  "Leg Curl":               GH+"Lying_Leg_Curls/0.jpg",
+  "Leg Extension":          GH+"Leg_Extensions/0.jpg",
+  "Calf Raise":             GH+"Standing_Calf_Raises/0.jpg",
+  "Hip Thrust":             GH+"Barbell_Hip_Thrust/0.jpg",
+  "HIIT – Koşu Bandı":      GH+"Treadmill_Run/0.jpg",
+  "Plank":                  GH+"Plank/0.jpg",
+  "Crunch (Makina)":        GH+"Machine_Crunch/0.jpg",
+  "Russian Twist":          GH+"Russian_Twist/0.jpg",
+  "Cable Crunch":           GH+"Cable_Crunch/0.jpg",
+  "Leg Raise (Yatay)":      GH+"Flat_Bench_Lying_Leg_Raise/0.jpg",
+  "Ab Rollout":             GH+"Ab_Roller/0.jpg",
+  "Rowing Makinesi":        GH+"Rowing__Stationary/0.jpg",
+  "Lat Pulldown (Finişer)": GH+"Wide-Grip_Lat_Pulldown/1.jpg",
 };
+function getImgSrc(h){ return IMGS[h]||null; }
+function getImgFallbackSrc(h){ return null; }
+const EMO = {"Bench Press":"🏋️","İncline Dumbbell Press":"💪","Lat Pulldown":"🔽","Seated Cable Row":"🚣","Shoulder Press":"🏋️","Lateral Raise":"↔️","Tricep Pushdown":"⬇️","Bicep Curl":"💪","Squat":"🦵","Leg Press":"🦵","Romanian Deadlift":"🏋️","Leg Curl":"🦵","Leg Extension":"🦵","Calf Raise":"👟","Hip Thrust":"🍑","HIIT – Koşu Bandı":"🏃","Plank":"🧘","Crunch (Makina)":"🤸","Russian Twist":"🔄","Cable Crunch":"🤸","Leg Raise (Yatay)":"🦵","Ab Rollout":"🎯","Rowing Makinesi":"🚣","Lat Pulldown (Finişer)":"🔽"};
 
-// Fallback emojiler (görsel yüklenmezse)
-const EMOJI_FALLBACK = {
-  "Bench Press":"🏋️","İncline Dumbbell Press":"💪","Lat Pulldown":"🔽","Seated Cable Row":"🚣",
-  "Shoulder Press":"🏋️","Lateral Raise":"↔️","Tricep Pushdown":"⬇️","Bicep Curl":"💪",
-  "Squat":"🦵","Leg Press":"🦵","Romanian Deadlift":"🏋️","Leg Curl":"🦵",
-  "Leg Extension":"🦵","Calf Raise":"👟","Hip Thrust":"🍑",
-  "HIIT – Koşu Bandı":"🏃","Plank":"🧘","Crunch (Makina)":"🤸","Russian Twist":"🔄",
-  "Cable Crunch":"🤸","Leg Raise (Yatay)":"🦵","Ab Rollout":"🎯",
-  "Rowing Makinesi":"🚣","Lat Pulldown (Finişer)":"🔽",
-};
-
-/* ─── VERİ ─── */
-const DAYS_DATA=[
-  {short:"Pzt",name:"Pazartesi",ico:"💪",type:"Üst Vücut",dur:"76 dk",aktif:true,rest:false,blocked:false,
+const DAYS_DEF = [
+  {name:"Pazartesi",short:"Pzt",ico:"💪",type:"Üst Vücut",dur:"76 dk",train:true,blocked:false,rest:false,
    checks:["Bench Press 4×10","Lat Pulldown 4×10","Shoulder Press 3×12","Cable Row 3×12","Gerilme"]},
-  {short:"Sal",name:"Salı",ico:"📚",type:"Eğitim Günü",dur:"–",aktif:false,rest:false,blocked:true,checks:[]},
-  {short:"Çar",name:"Çarşamba",ico:"🦵",type:"Alt Vücut",dur:"80 dk",aktif:true,rest:false,blocked:false,
+  {name:"Salı",short:"Sal",ico:"📚",type:"Eğitim",dur:"–",train:false,blocked:true,rest:false,checks:[]},
+  {name:"Çarşamba",short:"Çar",ico:"🦵",type:"Alt Vücut",dur:"80 dk",train:true,blocked:false,rest:false,
    checks:["Squat 4×10","Leg Press 4×12","Calf Raise 4×20","Hip Thrust 3×12","Gerilme"]},
-  {short:"Per",name:"Perşembe",ico:"📚",type:"Eğitim Günü",dur:"–",aktif:false,rest:false,blocked:true,checks:[]},
-  {short:"Cum",name:"Cuma",ico:"🔥",type:"Core & HIIT",dur:"66 dk",aktif:true,rest:false,blocked:false,
-   checks:["HIIT 20 dk","Plank 3×60sn","Cable Crunch 3×15","Russian Twist 3×20","Ab Rollout 3×10"]},
-  {short:"Cmt",name:"Cumartesi",ico:"🚣",type:"Kürek (Rowing)",dur:"58 dk",aktif:true,rest:false,blocked:false,
-   checks:["Yürüyüş ısınma 5dk","Rowing 40dk","Lat Pulldown finişer 3×12","Gerilme"]},
-  {short:"Paz",name:"Pazar",ico:"🧘",type:"Aktif Dinlenme",dur:"50 dk",aktif:false,rest:true,blocked:false,
-   checks:["Hafif yürüyüş 30dk","Full-body germe","Foam roller 10dk"]},
+  {name:"Perşembe",short:"Per",ico:"📚",type:"Eğitim",dur:"–",train:false,blocked:true,rest:false,checks:[]},
+  {name:"Cuma",short:"Cum",ico:"🔥",type:"Core & HIIT",dur:"66 dk",train:true,blocked:false,rest:false,
+   checks:["HIIT 20dk","Plank 3×60sn","Cable Crunch 3×15","Russian Twist 3×20","Ab Rollout 3×10"]},
+  {name:"Cumartesi",short:"Cmt",ico:"🚣",type:"Kürek",dur:"58 dk",train:true,blocked:false,rest:false,
+   checks:["Isınma 5dk","Rowing 40dk","Lat Pulldown 3×12","Gerilme"]},
+  {name:"Pazar",short:"Paz",ico:"🧘",type:"Dinlenme",dur:"50 dk",train:false,blocked:false,rest:true,
+   checks:["Yürüyüş 30dk","Germe","Foam roller"]},
 ];
 
 const MOVES=[
-  {gun:"Pazartesi",hareket:"Bench Press",kas:"Göğüs",set:"4×10",kg:"60 kg",din:"90 sn",form:"Omuzlar geri-aşağı, dirsek 45°"},
-  {gun:"Pazartesi",hareket:"İncline Dumbbell Press",kas:"Üst Göğüs",set:"3×12",kg:"20 kg/el",din:"75 sn",form:"Bank 30-45° açı"},
-  {gun:"Pazartesi",hareket:"Lat Pulldown",kas:"Sırt",set:"4×10",kg:"50 kg",din:"90 sn",form:"Göğse çek, skapula sıkıştır"},
-  {gun:"Pazartesi",hareket:"Seated Cable Row",kas:"Orta Sırt",set:"3×12",kg:"45 kg",din:"75 sn",form:"Gövde dik, dirsek yakın"},
-  {gun:"Pazartesi",hareket:"Shoulder Press",kas:"Omuz",set:"3×12",kg:"30 kg",din:"75 sn",form:"Baş üstüne tam uzat"},
-  {gun:"Pazartesi",hareket:"Lateral Raise",kas:"Yan Omuz",set:"3×15",kg:"8 kg/el",din:"60 sn",form:"Dirsek hafif kırık"},
-  {gun:"Pazartesi",hareket:"Tricep Pushdown",kas:"Triceps",set:"3×15",kg:"25 kg",din:"60 sn",form:"Dirsekler sabit, tam uzat"},
-  {gun:"Pazartesi",hareket:"Bicep Curl",kas:"Biceps",set:"3×12",kg:"12 kg/el",din:"60 sn",form:"Sallanma yok, kontrollü"},
-  {gun:"Çarşamba",hareket:"Squat",kas:"Bacak Genel",set:"4×10",kg:"70 kg",din:"90 sn",form:"Diz ayak ucunu geçmesin"},
-  {gun:"Çarşamba",hareket:"Leg Press",kas:"Kuadriseps",set:"4×12",kg:"100 kg",din:"90 sn",form:"Tam hareket açıklığı"},
-  {gun:"Çarşamba",hareket:"Romanian Deadlift",kas:"Hamstring",set:"3×12",kg:"60 kg",din:"90 sn",form:"Sırt düz, kalçadan eğil"},
-  {gun:"Çarşamba",hareket:"Leg Curl",kas:"Hamstring",set:"3×15",kg:"30 kg",din:"75 sn",form:"Tam sıkıştır"},
-  {gun:"Çarşamba",hareket:"Leg Extension",kas:"Kuadriseps",set:"3×15",kg:"35 kg",din:"60 sn",form:"Üstte 1 sn tut"},
-  {gun:"Çarşamba",hareket:"Calf Raise",kas:"Baldır",set:"4×20",kg:"40 kg",din:"60 sn",form:"Tam aşağı in, tam çık"},
-  {gun:"Çarşamba",hareket:"Hip Thrust",kas:"Gluteus",set:"3×12",kg:"60 kg",din:"75 sn",form:"Pelvis nötr, köprü tam"},
-  {gun:"Cuma",hareket:"HIIT – Koşu Bandı",kas:"Kardiyovasküler",set:"10 tur",kg:"8-9/5 km/h",din:"–",form:"1dk hızlı + 1dk yavaş = 20dk"},
-  {gun:"Cuma",hareket:"Plank",kas:"Core",set:"3×60 sn",kg:"–",din:"30 sn",form:"Kalça ne yukarı ne aşağı"},
-  {gun:"Cuma",hareket:"Crunch (Makina)",kas:"Karın Üst",set:"3×20",kg:"10 kg",din:"60 sn",form:"Boyun kasılmasın"},
-  {gun:"Cuma",hareket:"Russian Twist",kas:"Oblique",set:"3×20/yan",kg:"5 kg",din:"60 sn",form:"Topuklar yerde değil"},
-  {gun:"Cuma",hareket:"Cable Crunch",kas:"Karın",set:"3×15",kg:"20 kg",din:"75 sn",form:"Karın kasarak eğil"},
-  {gun:"Cuma",hareket:"Leg Raise (Yatay)",kas:"Alt Karın",set:"3×15",kg:"–",din:"60 sn",form:"Bel yere yapışık kalsın"},
-  {gun:"Cuma",hareket:"Ab Rollout",kas:"Tüm Core",set:"3×10",kg:"–",din:"75 sn",form:"Kontrollü uzan ve dön"},
-  {gun:"Cumartesi",hareket:"Rowing Makinesi",kas:"Tüm Vücut",set:"30-45 dk",kg:"Direnç 5-7",din:"–",form:"500m split 2:15-2:30 hedefi"},
-  {gun:"Cumartesi",hareket:"Lat Pulldown (Finişer)",kas:"Sırt",set:"3×12",kg:"50 kg",din:"75 sn",form:"Kürek sonrası aktivasyon"},
+  {gun:"Pazartesi",h:"Bench Press",kas:"Göğüs",set:"4×10",kg:"60 kg",din:"90 sn",form:"Omuzlar geri-aşağı, dirsek 45°"},
+  {gun:"Pazartesi",h:"İncline Dumbbell Press",kas:"Üst Göğüs",set:"3×12",kg:"20 kg/el",din:"75 sn",form:"Bank 30-45° açı"},
+  {gun:"Pazartesi",h:"Lat Pulldown",kas:"Sırt",set:"4×10",kg:"50 kg",din:"90 sn",form:"Göğse çek, skapula sıkıştır"},
+  {gun:"Pazartesi",h:"Seated Cable Row",kas:"Orta Sırt",set:"3×12",kg:"45 kg",din:"75 sn",form:"Gövde dik, dirsek yakın"},
+  {gun:"Pazartesi",h:"Shoulder Press",kas:"Omuz",set:"3×12",kg:"30 kg",din:"75 sn",form:"Baş üstüne tam uzat"},
+  {gun:"Pazartesi",h:"Lateral Raise",kas:"Yan Omuz",set:"3×15",kg:"8 kg/el",din:"60 sn",form:"Dirsek hafif kırık"},
+  {gun:"Pazartesi",h:"Tricep Pushdown",kas:"Triceps",set:"3×15",kg:"25 kg",din:"60 sn",form:"Dirsekler sabit, tam uzat"},
+  {gun:"Pazartesi",h:"Bicep Curl",kas:"Biceps",set:"3×12",kg:"12 kg/el",din:"60 sn",form:"Sallanma yok, kontrollü"},
+  {gun:"Çarşamba",h:"Squat",kas:"Bacak",set:"4×10",kg:"70 kg",din:"90 sn",form:"Diz ayak ucunu geçmesin"},
+  {gun:"Çarşamba",h:"Leg Press",kas:"Kuadriseps",set:"4×12",kg:"100 kg",din:"90 sn",form:"Tam hareket açıklığı"},
+  {gun:"Çarşamba",h:"Romanian Deadlift",kas:"Hamstring",set:"3×12",kg:"60 kg",din:"90 sn",form:"Sırt düz, kalçadan eğil"},
+  {gun:"Çarşamba",h:"Leg Curl",kas:"Hamstring",set:"3×15",kg:"30 kg",din:"75 sn",form:"Tam sıkıştır"},
+  {gun:"Çarşamba",h:"Leg Extension",kas:"Kuadriseps",set:"3×15",kg:"35 kg",din:"60 sn",form:"Üstte 1 sn tut"},
+  {gun:"Çarşamba",h:"Calf Raise",kas:"Baldır",set:"4×20",kg:"40 kg",din:"60 sn",form:"Tam aşağı in, tam çık"},
+  {gun:"Çarşamba",h:"Hip Thrust",kas:"Gluteus",set:"3×12",kg:"60 kg",din:"75 sn",form:"Pelvis nötr, köprü tam"},
+  {gun:"Cuma",h:"HIIT – Koşu Bandı",kas:"Kardio",set:"10 tur",kg:"8-9/5km/h",din:"–",form:"1dk hızlı + 1dk yavaş"},
+  {gun:"Cuma",h:"Plank",kas:"Core",set:"3×60 sn",kg:"–",din:"30 sn",form:"Kalça ne yukarı ne aşağı"},
+  {gun:"Cuma",h:"Crunch (Makina)",kas:"Karın",set:"3×20",kg:"10 kg",din:"60 sn",form:"Boyun kasılmasın"},
+  {gun:"Cuma",h:"Russian Twist",kas:"Oblique",set:"3×20/yan",kg:"5 kg",din:"60 sn",form:"Topuklar yerde değil"},
+  {gun:"Cuma",h:"Cable Crunch",kas:"Karın",set:"3×15",kg:"20 kg",din:"75 sn",form:"Karın kasarak eğil"},
+  {gun:"Cuma",h:"Leg Raise (Yatay)",kas:"Alt Karın",set:"3×15",kg:"–",din:"60 sn",form:"Bel yere yapışık"},
+  {gun:"Cuma",h:"Ab Rollout",kas:"Tüm Core",set:"3×10",kg:"–",din:"75 sn",form:"Kontrollü uzan ve dön"},
+  {gun:"Cumartesi",h:"Rowing Makinesi",kas:"Tüm Vücut",set:"30-45dk",kg:"Direnç 5-7",din:"–",form:"500m split 2:15-2:30"},
+  {gun:"Cumartesi",h:"Lat Pulldown (Finişer)",kas:"Sırt",set:"3×12",kg:"50 kg",din:"75 sn",form:"Kürek sonrası aktivasyon"},
 ];
 
-const DAY_COLORS={
-  Pazartesi:{c:'var(--blue)',bg:'var(--blue-dim)',label:'ÜST'},
-  Çarşamba:{c:'var(--green)',bg:'var(--green-dim)',label:'ALT'},
-  Cuma:{c:'var(--red)',bg:'var(--red-dim)',label:'CORE'},
-  Cumartesi:{c:'var(--amber)',bg:'var(--amber-dim)',label:'KÜREK'},
+const DAY_COLORS={Pazartesi:{c:"var(--blue)",bg:"var(--bdim)",lbl:"ÜST"},Çarşamba:{c:"var(--green)",bg:"var(--gdim)",lbl:"ALT"},Cuma:{c:"var(--red)",bg:"var(--rdim)",lbl:"CORE"},Cumartesi:{c:"var(--amber)",bg:"var(--adim)",lbl:"KÜREK"}};
+const TRAIN_DAYS=["Pazartesi","Çarşamba","Cuma","Cumartesi"];
+const DUR_DATA=[{gun:"Pazartesi",is:10,kar:0,guc:61,din:5},{gun:"Çarşamba",is:10,kar:0,guc:65,din:5},{gun:"Cuma",is:5,kar:20,guc:36,din:5},{gun:"Cumartesi",is:5,kar:40,guc:8,din:5},{gun:"Pazar",is:0,kar:30,guc:0,din:20}];
+const OLCUM_FIELDS=[{id:"bel",label:"Bel (cm)"},{id:"gobek",label:"Göbek (cm)"},{id:"kalca",label:"Kalça (cm)"},{id:"baldır",label:"Baldır (cm)"},{id:"kol",label:"Kol (cm)"},{id:"gogus",label:"Göğüs (cm)"}];
+const MONTHS_2026=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const MONTH_DAYS=[31,28,31,30,31,30,31,31,30,31,30,31];
+
+/* ═══════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════ */
+let S = JSON.parse(localStorage.getItem('asar_v2')||'null') || {
+  kiloData:[{label:"30 Mar 26",val:92.0}],
+  doneDays:[],      // "2026-04-07"
+  movesDone:{},     // {"2026-04-07":["Pazartesi::Bench Press",...]}
+  checks:{},        // {"2026-04-07":[0,2,...]}
+  olcumlar:{},      // {"2026-04":{bel:88,...}}
+  totalSeans:0,
 };
-const GUNLUK_HEDEF={Pazartesi:8,Çarşamba:7,Cuma:7,Cumartesi:2};
-const DAY_IDX_MAP={Pazartesi:0,Çarşamba:2,Cuma:4,Cumartesi:5};
-const DUR_DATA=[
-  {gun:"Pazartesi",is:10,kar:0,guc:61,din:5},
-  {gun:"Çarşamba",is:10,kar:0,guc:65,din:5},
-  {gun:"Cuma",is:5,kar:20,guc:36,din:5},
-  {gun:"Cumartesi",is:5,kar:40,guc:8,din:5},
-  {gun:"Pazar",is:0,kar:30,guc:0,din:20},
-];
-const OLCUM_FIELDS=[
-  {id:"bel",label:"Bel (cm)"},{id:"gobek",label:"Göbek (cm)"},{id:"kalca",label:"Kalça (cm)"},
-  {id:"baldır",label:"Baldır (cm)"},{id:"kol",label:"Kol (cm)"},{id:"gogus",label:"Göğüs (cm)"},
-];
+if(!S.movesDone)S.movesDone={};
+if(!S.checks)S.checks={};
+if(!S.olcumlar)S.olcumlar={};
 
-/* ─── STATE ─── */
-let state=JSON.parse(localStorage.getItem('fitdash_v3')||'null')||{doneDays:[],kiloData:[{label:"1 Nis",val:90.0}],checks:[],movesDone:[],olcumlar:[],totalSeans:0};
-if(!state.movesDone)state.movesDone=[];
-function saveState(){localStorage.setItem('fitdash_v3',JSON.stringify(state));}
+function save(){localStorage.setItem('asar_v2',JSON.stringify(S));}
 
-/* ─── HAF. HEDEF ─── */
-function mKey(g,h){return g+'::'+h;}
-function gunTam(gun){const gm=MOVES.filter(m=>m.gun===gun);return gm.length>0&&gm.every(m=>state.movesDone.includes(mKey(m.gun,m.hareket)));}
-function weeklyStats(){const g=Object.keys(GUNLUK_HEDEF);return{toplam:g.length,tamamlanan:g.filter(gunTam).length};}
-function gunProg(gun){const gm=MOVES.filter(m=>m.gun===gun);return{done:gm.filter(m=>state.movesDone.includes(mKey(m.gun,m.hareket))).length,total:gm.length};}
+/* ═══════════════════════════════════════════════════════
+   TAKVIM STATE
+═══════════════════════════════════════════════════════ */
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+let calYear=2026, calMonth=TODAY.getMonth(); // 0-indexed
+let selectedWeekMonday = getWeekMonday(TODAY); // Date object
+let activeFilter='Tümü';
+let goalMonthKey='2026-'+String(TODAY.getMonth()+1).padStart(2,'0');
 
-/* ─── NAV ─── */
-function navTo(page,btn){
+function getWeekMonday(d){
+  const dt=new Date(d);dt.setHours(0,0,0,0);
+  const day=dt.getDay();
+  const diff=(day===0?-6:1-day);
+  dt.setDate(dt.getDate()+diff);
+  return dt;
+}
+
+function dateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function monthKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;}
+
+function isToday(d){return d.toDateString()===TODAY.toDateString();}
+function isInSelectedWeek(d){
+  const end=new Date(selectedWeekMonday);end.setDate(end.getDate()+6);
+  return d>=selectedWeekMonday&&d<=end;
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════════════ */
+function navTo(page,btn,mob){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.ni,.mn-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   if(btn)btn.classList.add('active');
+  const map={anasayfa:0,program:1,hareketler:2,kilo:3,hedefler:4};
+  if(mob) document.querySelectorAll('.ni')[map[page]??0]?.classList.add('active');
+  else    document.querySelectorAll('.mn-item')[map[page]??0]?.classList.add('active');
   if(page==='hareketler')renderMovesPage();
+  if(page==='hedefler'){renderGoalMonthPills();renderHedefler();renderMonthlyChart();}
+  if(page==='kilo'){initKiloChart();renderKiloHistory();}
+  if(page==='sureler'){renderDurBars();setTimeout(initSurelerChart,80);}
+  if(page==='program')renderCalendar();
 }
 
-/* ─── UTILS ─── */
-function todayDayIndex(){return[6,0,1,2,3,4,5][new Date().getDay()];}
-function nisanGun(){const n=new Date(),s=new Date(2025,3,1);return Math.max(0,Math.min(30,Math.floor((n-s)/86400000)));}
-function gunStr(){return["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"][new Date().getDay()];}
-function tarihStr(d){const ay=["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];return d.getDate()+" "+ay[d.getMonth()]+" "+d.getFullYear();}
-
+/* ═══════════════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════════════ */
 function initHeader(){
-  document.getElementById('todayBadge').textContent="Bugün: "+gunStr();
-  document.getElementById('todaySub').textContent=tarihStr(new Date())+" · Maslak 1453 MacFit";
+  const days=["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+  const ay=MONTHS_2026;
+  document.getElementById('todayBadge').textContent="Bugün: "+days[TODAY.getDay()];
+  document.getElementById('todaySub').textContent=`${TODAY.getDate()} ${ay[TODAY.getMonth()]} ${TODAY.getFullYear()} · Maslak 1453 MacFit`;
 }
 
-/* ─── WEEK GRID ─── */
-function renderWeekGrid(){
-  const g=document.getElementById('weekGrid');if(!g)return;g.innerHTML='';
-  const ti=todayDayIndex();
-  DAYS_DATA.forEach((d,i)=>{
-    const done=state.doneDays.includes(i);
+/* ═══════════════════════════════════════════════════════
+   TAKVİM
+═══════════════════════════════════════════════════════ */
+function shiftCalMonth(dir){
+  if(dir===0){calYear=TODAY.getFullYear();calMonth=TODAY.getMonth();}
+  else{
+    calMonth+=dir;
+    if(calMonth<0){calMonth=11;calYear--;}
+    if(calMonth>11){calMonth=0;calYear++;}
+  }
+  renderCalendar();
+}
+
+function renderCalendar(){
+  ['','2'].forEach(sfx=>renderCalInstance('calTitle'+sfx,'calWeekdays'+sfx,'calDays'+sfx,'weekStripLabel'+sfx,'weekStripDays'+sfx));
+  updateWeekStripLabel();
+}
+
+function renderCalInstance(titleId,wdId,daysId,stripLblId,stripId){
+  const tEl=document.getElementById(titleId); if(!tEl)return;
+  tEl.textContent=MONTHS_2026[calMonth]+' '+calYear;
+
+  const wdEl=document.getElementById(wdId); if(!wdEl)return;
+  const wd=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  wdEl.innerHTML=wd.map(d=>`<div class="cal-wd">${d}</div>`).join('');
+
+  const dEl=document.getElementById(daysId); if(!dEl)return;
+  // First day of month (0=Sun)
+  const firstDay=new Date(calYear,calMonth,1);
+  const startDow=firstDay.getDay(); // 0=Sun
+  // Grid starts on Monday
+  const startOffset=(startDow===0?-6:1-startDow);
+  const gridStart=new Date(firstDay);
+  gridStart.setDate(gridStart.getDate()+startOffset);
+
+  // Build 6 weeks (42 cells)
+  let html='';
+  let current=new Date(gridStart);
+  for(let week=0;week<6;week++){
+    const weekDays=[];
+    for(let d=0;d<7;d++){
+      weekDays.push(new Date(current));
+      current.setDate(current.getDate()+1);
+    }
+    // Check if week is relevant (contains this month)
+    const hasThisMonth=weekDays.some(d=>d.getMonth()===calMonth&&d.getFullYear()===calYear);
+    if(!hasThisMonth&&week>3)continue;
+
+    const monday=weekDays[0];
+    html+=`<div style="display:contents" onclick="selectWeek('${dateKey(monday)}')" class="cal-week-row">`;
+    weekDays.forEach((d,di)=>{
+      const dk=dateKey(d);
+      const done=S.doneDays.includes(dk);
+      const today=isToday(d);
+      const inSel=isInSelectedWeek(d);
+      const otherMonth=d.getMonth()!==calMonth||d.getFullYear()!==calYear;
+      const dayIdx=di; // 0=Mon
+      const def=DAYS_DEF[dayIdx];
+      const isTrainDay=def&&def.train;
+      let cls='cal-day';
+      if(today)cls+=' cal-today';
+      else if(done)cls+=' cal-done';
+      if(inSel)cls+=' in-selected-week';
+      if(otherMonth)cls+=' cal-other-month';
+      if(def&&def.blocked)cls+=' cal-blocked';
+      if(isTrainDay&&!done&&!otherMonth)cls+=' cal-train-day';
+      html+=`<div class="${cls}" onclick="event.stopPropagation();selectWeek('${dateKey(monday)}')">
+        <div class="cal-day-num">${d.getDate()}</div>
+        ${done?'':'<div class="cal-day-dot"></div>'}
+      </div>`;
+    });
+    html+='</div>';
+  }
+  dEl.innerHTML=`<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">${html}</div>`;
+
+  renderWeekStrip(stripId);
+}
+
+function selectWeek(mondayKey){
+  const parts=mondayKey.split('-');
+  selectedWeekMonday=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]));
+  renderCalendar();
+  updateWeekStripLabel();
+}
+
+function updateWeekStripLabel(){
+  const end=new Date(selectedWeekMonday);end.setDate(end.getDate()+6);
+  const ay=MONTHS_2026;
+  const s=`${selectedWeekMonday.getDate()} ${ay[selectedWeekMonday.getMonth()]}`;
+  const e=`${end.getDate()} ${ay[end.getMonth()]} ${end.getFullYear()}`;
+  const lbl=`${s} – ${e}`;
+  ['weekStripLabel','weekStripLabel2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='📆 '+lbl;});
+  const pel=document.getElementById('programWeekLabel');if(pel)pel.textContent=lbl;
+  const mdl=document.getElementById('movesDateLabel');if(mdl)mdl.textContent=lbl;
+}
+
+function renderWeekStrip(containerId){
+  const c=document.getElementById(containerId);if(!c)return;
+  c.innerHTML='';
+  for(let i=0;i<7;i++){
+    const d=new Date(selectedWeekMonday);d.setDate(d.getDate()+i);
+    const def=DAYS_DEF[i];
+    const dk=dateKey(d);
+    const done=S.doneDays.includes(dk);
+    const today=isToday(d);
+    const dayMoves=MOVES.filter(m=>m.gun===def.name&&getImgSrc(m.h));
+    const firstImg=dayMoves.length>0&&def.train?getImgSrc(dayMoves[0].h):null;
+    const firstFb=dayMoves.length>0&&def.train?getImgFallbackSrc(dayMoves[0].h):null;
+    const thumbHtml=firstImg
+      ?`<img class="ws-thumb" src="${firstImg}" onerror="this.onerror=null;this.style.display='none'" loading="lazy" alt="">`
+      :`<div style="font-size:16px">${def.ico}</div>`;
+
+    let cls='ws-day';
+    if(done)cls+=' ws-done';
+    if(today&&def.train)cls+=' ws-today';
+    if(def.blocked)cls+=' ws-blocked';
+    if(def.rest)cls+=' ws-rest';
+
     const div=document.createElement('div');
-    div.className='day-slot'+(done?' done':'')+(i===ti&&d.aktif?' active-today':'')+(d.blocked?' blocked':'')+(d.rest?' rest':'');
-    div.innerHTML=`<div class="day-name-lbl">${d.short}</div><div class="day-ico-lbl">${d.ico}</div><div class="day-type-lbl">${d.type}</div>${done?'<div class="day-done-tick">✓ YAPILDI</div>':''}<div class="day-dur-lbl">${d.dur}</div>`;
-    if(!d.blocked&&!d.rest){div.onclick=()=>{const idx=state.doneDays.indexOf(i);if(idx>-1)state.doneDays.splice(idx,1);else{state.doneDays.push(i);state.totalSeans=Math.max(state.totalSeans||0,state.doneDays.length);}saveState();renderWeekGrid();updateMetrics();updateHedefler();};}
-    g.appendChild(div);
-  });
+    div.className=cls;
+    div.innerHTML=`
+      <div class="ws-name">${def.short}</div>
+      <div class="ws-date">${d.getDate()}</div>
+      ${thumbHtml}
+      <div class="ws-type" style="font-size:8px;text-align:center;line-height:1.2">${def.type}</div>
+      ${done?'<div class="ws-tick">✓</div>':''}
+      <div class="ws-dur">${def.dur}</div>
+    `;
+    if(!def.blocked&&!def.rest){
+      div.onclick=()=>toggleDayDone(dk,d);
+    }
+    c.appendChild(div);
+  }
 }
 
-/* ─── METRICS ─── */
+function toggleDayDone(dk, d){
+  const idx=S.doneDays.indexOf(dk);
+  if(idx>-1)S.doneDays.splice(idx,1);
+  else{S.doneDays.push(dk);S.totalSeans=(S.totalSeans||0)+1;}
+  save();
+  renderCalendar();
+  updateMetrics();
+  updateNavBadge();
+}
+
+/* ═══════════════════════════════════════════════════════
+   METRICS
+═══════════════════════════════════════════════════════ */
 function updateMetrics(){
-  const cnt=state.doneDays.length;
-  const mevcut=state.kiloData[state.kiloData.length-1].val;
-  const kayip=+(90-mevcut).toFixed(1);
-  const gun=nisanGun();const gunPct=Math.round(gun/30*100);
-  const saatDone=+(cnt*1.3).toFixed(1);const kiloPct=Math.min(Math.round(kayip/3*100),100);
+  const mevcut=S.kiloData[S.kiloData.length-1].val;
+  const kayip=+(92-mevcut).toFixed(1);
+  const kiloPct=Math.min(Math.round(kayip/12*100),100);
+
+  // Bu haftanın seans sayısı (seçili hafta)
+  const weekDone=[...Array(7)].filter((_,i)=>{
+    const d=new Date(selectedWeekMonday);d.setDate(d.getDate()+i);
+    return S.doneDays.includes(dateKey(d))&&DAYS_DEF[i].train;
+  }).length;
+
+  // Bu ay
+  const mk=`${TODAY.getFullYear()}-${String(TODAY.getMonth()+1).padStart(2,'0')}`;
+  const ayDone=S.doneDays.filter(dk=>dk.startsWith(mk)).length;
+  const totalSeans=S.totalSeans||0;
+
   const el=id=>document.getElementById(id);
   if(el('m-kilo'))el('m-kilo').textContent=mevcut.toFixed(1);
-  if(el('m-kilo-delta')){const d=+(mevcut-87).toFixed(1);el('m-kilo-delta').innerHTML=d<=0?'<span class="delta-pos">🎉 Hedefe ulaştın!</span>':`<span class="delta-neg">Hedefe ${d} kg kaldı</span>`;}
-  if(el('m-week'))el('m-week').textContent=cnt;
-  if(el('m-week-pct'))el('m-week-pct').textContent='%'+Math.round(cnt/4*100)+' tamamlandı';
-  if(el('m-nisan-pct'))el('m-nisan-pct').textContent=gunPct;
-  if(el('m-nisan-gun'))el('m-nisan-gun').textContent=gun+" / 30 gün";
+  if(el('m-kilo-d'))el('m-kilo-d').innerHTML=kayip<=0?'<span class="dp">🎉 Hedefe ulaştın!</span>':`<span class="dn">Hedefe ${+(mevcut-80).toFixed(1)} kg kaldı</span>`;
+  if(el('m-week'))el('m-week').textContent=weekDone;
+  if(el('m-week-p'))el('m-week-p').textContent='%'+Math.round(weekDone/4*100)+' tamamlandı';
+  if(el('m-seans'))el('m-seans').textContent=ayDone;
+  if(el('m-total'))el('m-total').textContent=totalSeans;
+  if(el('m-total-kg'))el('m-total-kg').textContent=kayip>0?kayip+' kg yakıldı':'henüz başlangıç';
+
   const sb=(fid,hid,w,t)=>{const f=el(fid);if(f)f.style.width=Math.min(w,100)+'%';const h=el(hid);if(h)h.textContent=t;};
-  sb('pf-kilo','ph-kilo',kiloPct,kayip+" / 3 kg");
-  sb('pf-ant','ph-ant',cnt/4*100,cnt+" / 4");
-  sb('pf-ay','ph-ay',gunPct,gun+" / 30 gün");
-  sb('pf-saat','ph-saat',saatDone/22*100,saatDone+" / 22 saat");
+  sb('pf-kilo','ph-kilo',kiloPct,kayip+' / 12 kg');
+  sb('pf-ant','ph-ant',ayDone/16*100,ayDone+' / 16');
+  sb('pf-toplam','ph-toplam',Math.min(totalSeans/192*100,100),totalSeans+' seans');
+
   if(el('kp-mevcut'))el('kp-mevcut').textContent=mevcut.toFixed(1);
   if(el('kp-kayip'))el('kp-kayip').textContent=Math.max(0,kayip).toFixed(1);
-  if(el('kp-delta')){const d=+(mevcut-87).toFixed(1);el('kp-delta').innerHTML=d<=0?'<span class="delta-pos">Hedefe ulaştın!</span>':`<span class="delta-neg">Hedefe ${d} kg kaldı</span>`;}
-  if(el('kp-kayip-pct'))el('kp-kayip-pct').textContent='%'+kiloPct+' hedef tamamlandı';
-  const ws=weeklyStats();const badge=el('navBadge');
-  if(badge){badge.textContent=ws.tamamlanan+'/'+ws.toplam;badge.style.display=ws.tamamlanan>0?'':'none';}
+  if(el('kp-d'))el('kp-d').innerHTML=kayip<=0?'<span class="dp">Hedefe ulaştın!</span>':`<span class="dn">Hedefe ${+(mevcut-80).toFixed(1)} kg kaldı</span>`;
+  if(el('kp-pct'))el('kp-pct').textContent='%'+kiloPct+' hedef';
+
+  renderWeekSummaryTable();
+  renderHomeActivityChart();
 }
 
-/* ─── CHECKLIST ─── */
+function updateNavBadge(){
+  const ws=weeklyStats();
+  ['navBadge','mnBadge'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.textContent=ws.tamamlanan+'/'+ws.toplam;el.style.display=ws.tamamlanan>0?'':'none';});
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHECKLIST
+═══════════════════════════════════════════════════════ */
 function renderChecklist(){
   const c=document.getElementById('todayChecklist');if(!c)return;c.innerHTML='';
-  const ti=todayDayIndex();const items=DAYS_DATA[ti].checks;
-  if(!items.length){c.innerHTML='<div style="font-size:12px;color:var(--text3);font-weight:500">Bugün eğitim günü — iyi dersler! 📚</div>';return;}
-  items.forEach((item,i)=>{
-    const key='chk_'+ti+'_'+i;const done=state.checks.includes(key);
-    const div=document.createElement('div');div.className='check-item'+(done?' checked':'');
-    div.innerHTML=`<div class="check-box">${done?'✓':''}</div><span class="check-text">${item}</span>`;
-    div.onclick=()=>{const idx=state.checks.indexOf(key);if(idx>-1)state.checks.splice(idx,1);else state.checks.push(key);saveState();renderChecklist();};
+  const dayIdx=(TODAY.getDay()+6)%7;
+  const def=DAYS_DEF[dayIdx];
+  const dk=dateKey(TODAY);
+  if(!def.checks.length){c.innerHTML='<div style="font-size:12px;color:var(--text3)">Bugün antrenman yok 📚</div>';return;}
+  const done=S.checks[dk]||[];
+  def.checks.forEach((item,i)=>{
+    const isDone=done.includes(i);
+    const div=document.createElement('div');div.className='ci'+(isDone?' ck':'');
+    div.innerHTML=`<div class="cb">${isDone?'✓':''}</div><span class="cit">${item}</span>`;
+    div.onclick=()=>{
+      const arr=S.checks[dk]?[...S.checks[dk]]:[];
+      const pos=arr.indexOf(i);if(pos>-1)arr.splice(pos,1);else arr.push(i);
+      S.checks[dk]=arr;save();renderChecklist();
+    };
     c.appendChild(div);
   });
 }
 
-/* ─── HAREKET KARTLARI ─── */
-let activeFilter='Tümü';
+/* ═══════════════════════════════════════════════════════
+   HAREKET KARTLARI
+═══════════════════════════════════════════════════════ */
+function mKey(gun,h){return gun+'::'+h;}
 
-function renderMovesPage(){renderWeeklyGoalBanner();renderDayFilter();renderMovesGrid();}
+function getDayMovesDone(dk){return S.movesDone[dk]||[];}
+
+function gunTamForDay(gun,dk){
+  const gm=MOVES.filter(m=>m.gun===gun);
+  const done=getDayMovesDone(dk);
+  return gm.length>0&&gm.every(m=>done.includes(mKey(m.gun,m.h)));
+}
+
+function weeklyStats(){
+  const dk=dateKey(TODAY);
+  const gunler=TRAIN_DAYS;
+  const todayDef=DAYS_DEF[(TODAY.getDay()+6)%7];
+  return{toplam:gunler.length,tamamlanan:gunler.filter(g=>gunTamForDay(g,dk)).length};
+}
+
+function gunProgForDay(gun,dk){
+  const gm=MOVES.filter(m=>m.gun===gun);
+  const done=getDayMovesDone(dk);
+  return{done:gm.filter(m=>done.includes(mKey(m.gun,m.h))).length,total:gm.length};
+}
+
+function renderMovesPage(){
+  renderWeeklyGoalBanner();
+  renderDayFilter();
+  renderMovesGrid();
+}
 
 function renderWeeklyGoalBanner(){
   const c=document.getElementById('weeklyGoalBanner');if(!c)return;
   const ws=weeklyStats();
-  if(ws.tamamlanan===ws.toplam&&ws.toplam>0){
-    c.innerHTML=`<div class="confetti-banner">🏆 Tebrikler! Bu haftanın tüm antrenman günlerini tamamladın — haftalık hedefini tutturdun!</div>`;return;
-  }
+  if(ws.tamamlanan===ws.toplam&&ws.toplam>0){c.innerHTML=`<div class="confetti-b">🏆 Tebrikler! Bugünün tüm antrenmanlarını tamamladın!</div>`;return;}
   const pct=ws.toplam>0?Math.round(ws.tamamlanan/ws.toplam*100):0;
-  const dots=Object.keys(GUNLUK_HEDEF).map(g=>`<div class="wg-dot${gunTam(g)?' done':''}"></div>`).join('');
-  c.innerHTML=`<div class="weekly-goal-banner">
-    <div class="wg-icon">🎯</div>
-    <div class="wg-body">
-      <div class="wg-title">Haftalık Hedef — ${ws.tamamlanan} / ${ws.toplam} antrenman günü tamamlandı</div>
-      <div class="wg-sub">Her günün tüm hareketlerini bitirince o gün sayılır · Kalan: ${ws.toplam-ws.tamamlanan} gün</div>
-      <div class="wg-dots">${dots}</div>
+  const dk=dateKey(TODAY);
+  const dots=TRAIN_DAYS.map(g=>`<div class="wgb-dot${gunTamForDay(g,dk)?' d':''}"></div>`).join('');
+  c.innerHTML=`<div class="wgb">
+    <div class="wgb-icon">🎯</div>
+    <div class="wgb-body">
+      <div class="wgb-title">Haftalık Hedef — ${ws.tamamlanan} / ${ws.toplam} gün</div>
+      <div class="wgb-sub">Bugün: ${new Date().toLocaleDateString('tr-TR',{weekday:'long'})} · Tüm hareketleri bitir</div>
+      <div class="wgb-dots">${dots}</div>
     </div>
-    <div class="wg-right">
-      <div class="wg-count">${pct}<span style="font-size:14px;color:var(--text2)">%</span></div>
-      <div class="wg-track"><div class="wg-fill" style="width:${pct}%"></div></div>
+    <div class="wgb-right">
+      <div class="wgb-count">${pct}<span style="font-size:12px;color:var(--text2)">%</span></div>
+      <div class="wgb-track"><div class="wgb-fill${ws.tamamlanan===ws.toplam?' done':''}" style="width:${pct}%"></div></div>
     </div>
   </div>`;
 }
 
 function renderDayFilter(){
   const fd=document.getElementById('hareketFilter');if(!fd)return;fd.innerHTML='';
+  const dk=dateKey(TODAY);
   ['Tümü',...new Set(MOVES.map(m=>m.gun))].forEach(g=>{
+    const tam=g!=='Tümü'&&gunTamForDay(g,dk);
     const btn=document.createElement('button');
-    const tam=g!=='Tümü'&&gunTam(g);
-    btn.className='day-filter-btn'+(g===activeFilter?' active':'')+(tam?' gun-done':'');
-    if(g!=='Tümü'){const p=gunProg(g);btn.innerHTML=g+`<span class="day-pct">${p.done}/${p.total}</span>`;}
+    btn.className='df-btn'+(g===activeFilter?' active':'')+(tam?' gd':'');
+    if(g!=='Tümü'){const p=gunProgForDay(g,dk);btn.innerHTML=g+`<span class="dpct">${p.done}/${p.total}</span>`;}
     else btn.textContent='Tümü';
     btn.onclick=()=>{activeFilter=g;renderDayFilter();renderMovesGrid();};
     fd.appendChild(btn);
@@ -754,103 +1000,143 @@ function renderDayFilter(){
 
 function renderMovesGrid(){
   const grid=document.getElementById('movesGrid');if(!grid)return;grid.innerHTML='';
+  const dk=dateKey(TODAY);
+  const doneMoves=getDayMovesDone(dk);
   const filtered=activeFilter==='Tümü'?MOVES:MOVES.filter(m=>m.gun===activeFilter);
   filtered.forEach(m=>{
-    const key=mKey(m.gun,m.hareket);const done=state.movesDone.includes(key);
-    const card=document.createElement('div');card.className='move-card'+(done?' move-done':'');
-    const dc=DAY_COLORS[m.gun]||{c:'var(--text3)',bg:'var(--bg4)',label:'?'};
-    const imgUrl=EXERCISE_IMGS[m.hareket];
-    const emoji=EMOJI_FALLBACK[m.hareket]||'💪';
+    const key=mKey(m.gun,m.h);
+    const done=doneMoves.includes(key);
+    const card=document.createElement('div');
+    card.className='move-card'+(done?' done':'');
+    const dc=DAY_COLORS[m.gun]||{c:"var(--text3)",bg:"var(--bg4)",lbl:"?"};
+    const imgSrc=getImgSrc(m.h);
+    const emoji=EMO[m.h]||'💪';
+    // onerror: GitHub URL bozuksa emoji göster
+    const imgHtml=imgSrc
+      ? `<img src="${imgSrc}" alt="${m.h}" loading="lazy" onerror="this.onerror=null;this.parentNode.innerHTML='<div class=\\'mc-fallback\\'>${emoji}</div>'">`
+      : `<div class="mc-fallback">${emoji}</div>`;
+
     card.innerHTML=`
-      <div class="move-card-img">
-        ${imgUrl
-          ? `<img src="${imgUrl}" alt="${m.hareket}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\\'img-fallback\\'>${emoji}</div>'">`
-          : `<div class="img-fallback">${emoji}</div>`
-        }
-        <div class="move-done-overlay">✓</div>
-        <div class="move-day-badge" style="background:${dc.bg};color:${dc.c}">${dc.label}</div>
+      <div class="mc-photo">
+        ${imgHtml}
+        <div class="mc-overlay">✓</div>
+        <div class="mc-badge" style="background:${dc.bg};color:${dc.c}">${dc.lbl}</div>
       </div>
-      <div class="move-card-body">
-        <div class="move-card-name">${m.hareket}</div>
-        <div class="move-card-kas">${m.kas}</div>
-        <div class="move-card-stats">
-          <span class="move-stat ms-blue">${m.set}</span>
-          ${m.kg!=='–'?`<span class="move-stat ms-amber">${m.kg}</span>`:''}
-          ${m.din!=='–'?`<span class="move-stat ms-gray">${m.din}</span>`:''}
-          ${done?'<span class="move-stat ms-green">✓ Bitti</span>':''}
+      <div class="mc-body">
+        <div class="mc-name">${m.h}</div>
+        <div class="mc-kas">${m.kas}</div>
+        <div class="mc-stats">
+          <span class="mst mst-b">${m.set}</span>
+          ${m.kg!=='–'?`<span class="mst mst-a">${m.kg}</span>`:''}
+          ${m.din!=='–'?`<span class="mst mst-g">${m.din}</span>`:''}
+          ${done?'<span class="mst mst-gr">✓ Bitti</span>':''}
         </div>
-        <div class="move-card-form">${m.form}</div>
+        <div class="mc-form">${m.form}</div>
       </div>
-      <div class="move-tick-btn">
-        <div class="tick-circle">${done?'✓':''}</div>
+      <div class="mc-tick">
+        <div class="tick-o">${done?'✓':''}</div>
         <span>${done?'Tamamlandı — geri al':'Tamamlandı olarak işaretle'}</span>
       </div>`;
-    card.querySelector('.move-tick-btn').onclick=e=>{e.stopPropagation();toggleMove(key,m.gun);};
+    card.querySelector('.mc-tick').onclick=e=>{e.stopPropagation();toggleMove(key,m.gun,dk);};
     grid.appendChild(card);
   });
 }
 
-function toggleMove(key,gun){
-  const idx=state.movesDone.indexOf(key);
-  if(idx>-1)state.movesDone.splice(idx,1);else state.movesDone.push(key);
-  const di=DAY_IDX_MAP[gun];
-  if(di!==undefined){
-    if(gunTam(gun)){if(!state.doneDays.includes(di)){state.doneDays.push(di);state.totalSeans=(state.totalSeans||0)+1;}}
-    else{const i=state.doneDays.indexOf(di);if(i>-1)state.doneDays.splice(i,1);}
-  }
-  saveState();renderMovesPage();renderWeekGrid();updateMetrics();updateHedefler();
+function toggleMove(key,gun,dk){
+  if(!S.movesDone[dk])S.movesDone[dk]=[];
+  const arr=S.movesDone[dk];
+  const idx=arr.indexOf(key);
+  if(idx>-1)arr.splice(idx,1);else arr.push(key);
+  // Auto-mark day
+  const gm=MOVES.filter(m=>m.gun===gun);
+  const allDone=gm.every(m=>arr.includes(mKey(m.gun,m.h)));
+  if(allDone&&!S.doneDays.includes(dk)){S.doneDays.push(dk);S.totalSeans=(S.totalSeans||0)+1;}
+  else if(!allDone){const di=S.doneDays.indexOf(dk);if(di>-1)S.doneDays.splice(di,1);}
+  save();renderMovesPage();renderCalendar();updateMetrics();updateNavBadge();
 }
 
-/* ─── PROGRAM ACCORDION ─── */
+/* ═══════════════════════════════════════════════════════
+   PROGRAM ACCORDION
+═══════════════════════════════════════════════════════ */
 function renderProgramAccordion(){
   const c=document.getElementById('programAccordion');if(!c)return;c.innerHTML='';
-  DAYS_DATA.forEach((d,i)=>{
-    const s=document.createElement('div');s.className='program-day-section';
-    s.innerHTML=`<div class="program-day-header" onclick="toggleAccordion(${i})">
-      <div style="font-size:22px">${d.ico}</div>
-      <div><div class="program-day-title">${d.name}</div><div style="font-size:12px;color:var(--text3);font-weight:500">${d.type}</div></div>
-      <div style="display:flex;gap:8px;align-items:center;margin-left:auto">
-        ${d.dur!=='–'?`<span class="badge" style="background:var(--blue-dim);color:var(--blue)">${d.dur}</span>`:'<span class="badge" style="background:var(--bg4);color:var(--text3)">Antrenman Yok</span>'}
-        <span style="color:var(--text3);font-size:20px;transition:transform .2s" id="acc-arrow-${i}">›</span>
+  DAYS_DEF.forEach((d,i)=>{
+    const dayMoves=MOVES.filter(m=>m.gun===d.name);
+    const dc=DAY_COLORS[d.name];
+    const s=document.createElement('div');s.style.marginBottom='8px';
+    s.innerHTML=`<div onclick="toggleAcc(${i})" style="display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rsm);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+      <div style="font-size:20px">${d.ico}</div>
+      <div><div style="font-size:13px;font-weight:600">${d.name}</div><div style="font-size:11px;color:var(--text3);font-weight:500">${d.type}</div></div>
+      <div style="margin-left:auto;display:flex;gap:7px;align-items:center">
+        ${d.dur!=='–'?`<span style="font-size:10px;font-weight:600;padding:2px 9px;border-radius:var(--rpill);background:var(--bdim);color:var(--blue)">${d.dur}</span>`:'<span style="font-size:10px;font-weight:600;padding:2px 9px;border-radius:var(--rpill);background:var(--bg4);color:var(--text3)">Yok</span>'}
+        <span style="color:var(--text3);font-size:18px;transition:transform .2s" id="acc-a-${i}">›</span>
       </div>
     </div>
-    <div class="program-day-body" id="acc-body-${i}">
-      <div class="card" style="border-radius:0 0 var(--radius) var(--radius);border-top:none">
-        ${d.checks.length?`<div class="check-list">${d.checks.map(ch=>`<div style="padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);font-size:12px;color:var(--text2);font-weight:500">${ch}</div>`).join('')}</div>`:`<div style="font-size:12px;color:var(--text3);font-weight:500">Bu gün ${d.type.toLowerCase()} — spor programı yok.</div>`}
+    <div id="acc-b-${i}" style="display:none">
+      <div class="card" style="border-radius:0 0 var(--r) var(--r);border-top:none;padding:0">
+        ${dayMoves.length?`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;padding:12px">`+dayMoves.map(m=>{
+          const imgP=getImgSrc(m.h);const emoji=EMO[m.h]||'💪';
+          const imgHtml=imgP?`<img src="${imgP}" style="width:100%;height:100%;object-fit:cover;filter:saturate(1.1)" loading="lazy" onerror="this.onerror=null;this.parentNode.innerHTML='<div style=\\'height:90px;display:flex;align-items:center;justify-content:center;font-size:28px\\'>${emoji}</div>'">`:`<div style="height:90px;display:flex;align-items:center;justify-content:center;font-size:28px">${emoji}</div>`;
+
+          return `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+            <div style="height:90px;position:relative;overflow:hidden">
+              ${imgHtml}
+              <div style="position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,var(--bg3),transparent)"></div>
+            </div>
+            <div style="padding:9px 11px">
+              <div style="font-size:12px;font-weight:700;color:var(--text)">${m.h}</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:1px">${m.kas}</div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">
+                <span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:var(--rpill);background:var(--bdim);color:var(--blue);font-family:var(--mono)">${m.set}</span>
+                ${m.kg!=='–'?`<span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:var(--rpill);background:var(--adim);color:var(--amber);font-family:var(--mono)">${m.kg}</span>`:''}
+              </div>
+              <div style="font-size:10px;color:var(--text3);margin-top:5px;line-height:1.3">${m.form}</div>
+            </div>
+          </div>`;
+        }).join('')+'</div>':`<div style="padding:14px;font-size:12px;color:var(--text3);font-weight:500">${d.blocked?'Eğitim günü 📚':d.rest?'Aktif dinlenme 🧘':'Program yok'}</div>`}
       </div>
     </div>`;
     c.appendChild(s);
   });
 }
-function toggleAccordion(i){const b=document.getElementById('acc-body-'+i);const a=document.getElementById('acc-arrow-'+i);const o=b.classList.toggle('open');if(a)a.style.transform=o?'rotate(90deg)':'';}
+function toggleAcc(i){
+  const b=document.getElementById('acc-b-'+i);const a=document.getElementById('acc-a-'+i);
+  const o=b.style.display==='none';b.style.display=o?'block':'none';
+  if(a)a.style.transform=o?'rotate(90deg)':'';
+}
 
-/* ─── KİLO ─── */
-let kiloChartObj=null;
+/* ═══════════════════════════════════════════════════════
+   KİLO
+═══════════════════════════════════════════════════════ */
+let kiloChart=null;
 function initKiloChart(){
-  const canvas=document.getElementById('kiloChart');if(!canvas)return;
-  if(kiloChartObj){kiloChartObj.destroy();kiloChartObj=null;}
-  kiloChartObj=new Chart(canvas,{type:'line',data:{labels:state.kiloData.map(d=>d.label),datasets:[
-    {label:'Kilo',data:state.kiloData.map(d=>d.val),borderColor:'#5b9cf6',backgroundColor:'rgba(91,156,246,0.08)',fill:true,tension:0.4,pointRadius:6,pointBackgroundColor:'#5b9cf6',pointBorderColor:'#0f1117',pointBorderWidth:2,borderWidth:2.5},
-    {label:'Hedef',data:state.kiloData.map(()=>87),borderColor:'#2ecc87',borderDash:[6,4],pointRadius:0,borderWidth:2,fill:false}
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
-    y:{min:84,max:92,ticks:{color:'#4a5270',font:{size:11,family:'JetBrains Mono'},callback:v=>v+' kg'},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
-    x:{ticks:{color:'#4a5270',font:{size:10}},grid:{display:false},border:{display:false}}
+  const cv=document.getElementById('kiloChart');if(!cv)return;
+  if(kiloChart){kiloChart.destroy();kiloChart=null;}
+  kiloChart=new Chart(cv,{type:'line',data:{
+    labels:S.kiloData.map(d=>d.label),
+    datasets:[
+      {label:'Kilo',data:S.kiloData.map(d=>d.val),borderColor:'#5b9cf6',backgroundColor:'rgba(91,156,246,0.07)',fill:true,tension:0.4,pointRadius:5,pointBackgroundColor:'#5b9cf6',pointBorderColor:'#07080e',pointBorderWidth:2,borderWidth:2.5},
+      {label:'Hedef',data:S.kiloData.map(()=>80),borderColor:'#2ecc87',borderDash:[6,4],pointRadius:0,borderWidth:2,fill:false}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+    y:{min:78,max:95,ticks:{color:'#3e4466',font:{size:11,family:'JetBrains Mono'},callback:v=>v+' kg'},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+    x:{ticks:{color:'#3e4466',font:{size:10}},grid:{display:false},border:{display:false}}
   }}});
 }
-function addKiloEntry(){
+function addKilo(){
   const inp=document.getElementById('kiloInput');const val=parseFloat(inp.value);
   if(isNaN(val)||val<50||val>200)return;
   const d=new Date();const ay=["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
-  state.kiloData.push({label:d.getDate()+" "+ay[d.getMonth()],val});
-  if(state.kiloData.length>12)state.kiloData.shift();
-  saveState();inp.value='';
-  if(kiloChartObj){kiloChartObj.data.labels=state.kiloData.map(d=>d.label);kiloChartObj.data.datasets[0].data=state.kiloData.map(d=>d.val);kiloChartObj.data.datasets[1].data=state.kiloData.map(()=>87);kiloChartObj.update();}
+  S.kiloData.push({label:`${d.getDate()} ${ay[d.getMonth()]} ${d.getFullYear().toString().slice(2)}`,val});
+  if(S.kiloData.length>20)S.kiloData.shift();
+  save();inp.value='';
+  if(kiloChart){kiloChart.data.labels=S.kiloData.map(d=>d.label);kiloChart.data.datasets[0].data=S.kiloData.map(d=>d.val);kiloChart.data.datasets[1].data=S.kiloData.map(()=>80);kiloChart.update();}
   renderKiloHistory();updateMetrics();
 }
-function clearKiloData(){if(!confirm('Tüm kilo verileri silinecek. Emin misin?'))return;state.kiloData=[{label:"1 Nis",val:90.0}];saveState();initKiloChart();renderKiloHistory();updateMetrics();}
+function clearKilo(){if(!confirm('Tüm kilo verileri silinecek?'))return;S.kiloData=[{label:"30 Mar 26",val:92.0}];save();initKiloChart();renderKiloHistory();updateMetrics();}
 function renderKiloHistory(){
   const tbody=document.getElementById('kiloHistoryBody');if(!tbody)return;tbody.innerHTML='';
-  [...state.kiloData].reverse().forEach((entry,i,arr)=>{
+  [...S.kiloData].reverse().forEach((entry,i,arr)=>{
     const prev=arr[i+1];const delta=prev?+(entry.val-prev.val).toFixed(1):0;
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${entry.label}</td><td style="font-family:var(--mono);font-weight:600">${entry.val.toFixed(1)} kg</td><td style="font-family:var(--mono)">${i===arr.length-1?'–':delta>0?`<span style="color:var(--red)">+${delta}</span>`:`<span style="color:var(--green)">${delta}</span>`}</td>`;
@@ -858,65 +1144,223 @@ function renderKiloHistory(){
   });
 }
 
-/* ─── SÜRE ─── */
+/* ═══════════════════════════════════════════════════════
+   SÜRE
+═══════════════════════════════════════════════════════ */
 function renderDurBars(){
   const c=document.getElementById('durBars');if(!c)return;c.innerHTML='';
   DUR_DATA.forEach(d=>{
     const tot=d.is+d.kar+d.guc+d.din;const sc=v=>Math.max(0,Math.round(v/85*100));
     const row=document.createElement('div');row.className='dur-row';
     let segs='';
-    if(d.is)segs+=`<div class="dur-seg seg-isinma" style="width:${sc(d.is)}%">${d.is}</div>`;
-    if(d.kar)segs+=`<div class="dur-seg seg-kardio" style="width:${sc(d.kar)}%">${d.kar}</div>`;
-    if(d.guc)segs+=`<div class="dur-seg seg-guc" style="width:${sc(d.guc)}%">${d.guc}</div>`;
-    if(d.din)segs+=`<div class="dur-seg seg-dinlenme" style="width:${sc(d.din)}%">${d.din}</div>`;
-    row.innerHTML=`<div class="dur-day-lbl">${d.gun}</div><div class="dur-bar-wrap">${segs}</div><div class="dur-total-lbl">${tot}</div>`;
+    if(d.is)segs+=`<div class="ds si" style="width:${sc(d.is)}%">${d.is}</div>`;
+    if(d.kar)segs+=`<div class="ds sk" style="width:${sc(d.kar)}%">${d.kar}</div>`;
+    if(d.guc)segs+=`<div class="ds sg" style="width:${sc(d.guc)}%">${d.guc}</div>`;
+    if(d.din)segs+=`<div class="ds sd" style="width:${sc(d.din)}%">${d.din}</div>`;
+    row.innerHTML=`<div class="dlbl">${d.gun}</div><div class="dbar">${segs}</div><div class="dtot">${tot}</div>`;
     c.appendChild(row);
   });
 }
+let surelerChart=null;
 function initSurelerChart(){
-  const canvas=document.getElementById('surelerChart');if(!canvas)return;
-  new Chart(canvas,{type:'bar',data:{labels:DUR_DATA.map(d=>d.gun),datasets:[
+  const cv=document.getElementById('surelerChart');if(!cv)return;
+  if(surelerChart){surelerChart.destroy();surelerChart=null;}
+  surelerChart=new Chart(cv,{type:'bar',data:{labels:DUR_DATA.map(d=>d.gun),datasets:[
     {label:'Isınma',data:DUR_DATA.map(d=>d.is),backgroundColor:'rgba(37,99,235,.7)',borderRadius:3},
     {label:'Kardio',data:DUR_DATA.map(d=>d.kar),backgroundColor:'rgba(220,38,38,.7)',borderRadius:3},
     {label:'Güç',data:DUR_DATA.map(d=>d.guc),backgroundColor:'rgba(29,78,216,.7)',borderRadius:3},
     {label:'Dinlenme',data:DUR_DATA.map(d=>d.din),backgroundColor:'rgba(5,150,105,.7)',borderRadius:3},
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
-    x:{stacked:true,ticks:{color:'#4a5270',font:{size:11}},grid:{display:false},border:{display:false}},
-    y:{stacked:true,ticks:{color:'#4a5270',font:{size:10},callback:v=>v+' dk'},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}}
+    x:{stacked:true,ticks:{color:'#3e4466',font:{size:11}},grid:{display:false},border:{display:false}},
+    y:{stacked:true,ticks:{color:'#3e4466',font:{size:10},callback:v=>v+' dk'},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}}
   }}});
 }
 
-/* ─── HEDEFLER ─── */
+/* ═══════════════════════════════════════════════════════
+   HEDEFLER
+═══════════════════════════════════════════════════════ */
+function renderGoalMonthPills(){
+  const c=document.getElementById('goalMonthPills');if(!c)return;c.innerHTML='';
+  for(let m=0;m<12;m++){
+    const key=`2026-${String(m+1).padStart(2,'0')}`;
+    const hasData=S.doneDays.some(dk=>dk.startsWith(key));
+    const btn=document.createElement('button');
+    btn.style.cssText=`font-size:11px;font-weight:600;padding:5px 12px;border-radius:var(--rpill);border:1px solid var(--border2);background:${key===goalMonthKey?'var(--bdim)':'var(--bg3)'};color:${key===goalMonthKey?'var(--blue)':hasData?'var(--green)':'var(--text2)'};cursor:pointer;margin-bottom:4px;transition:all .15s`;
+    btn.textContent=MONTHS_2026[m].slice(0,3);
+    btn.onclick=()=>{goalMonthKey=key;renderGoalMonthPills();renderHedefler();};
+    c.appendChild(btn);
+  }
+}
+
+function renderHedefler(){
+  const mObj=MONTHS_2026[parseInt(goalMonthKey.split('-')[1])-1]||'';
+  const el=id=>document.getElementById(id);
+  if(el('goalMonthName'))el('goalMonthName').textContent='— '+mObj;
+  if(el('olcumAyAd'))el('olcumAyAd').textContent=mObj;
+  renderOlcumForm();
+  updateHedeflerProgress();
+}
+
 function renderOlcumForm(){
   const c=document.getElementById('olcumForm');if(!c)return;c.innerHTML='';
+  const saved=S.olcumlar[goalMonthKey]||{};
   OLCUM_FIELDS.forEach(f=>{
-    const div=document.createElement('div');const saved=state.olcumlar.find(o=>o.id===f.id);
-    div.innerHTML=`<div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">${f.label}</div>
-    <input type="number" step="0.1" id="olcum_${f.id}" placeholder="–" value="${saved?saved.val:''}" class="olcum-input" style="width:100%">`;
+    const div=document.createElement('div');div.className='olcum-item';
+    div.innerHTML=`<label>${f.label}</label><input type="number" step="0.1" class="olc-inp" id="olcum_${f.id}" placeholder="–" value="${saved[f.id]||''}">`;
     c.appendChild(div);
   });
 }
+
 function saveOlcum(){
-  OLCUM_FIELDS.forEach(f=>{const inp=document.getElementById('olcum_'+f.id);const val=parseFloat(inp.value);if(!isNaN(val)){const ex=state.olcumlar.find(o=>o.id===f.id);if(ex)ex.val=val;else state.olcumlar.push({id:f.id,val});}});
-  saveState();const btn=document.querySelector('[onclick="saveOlcum()"]');
-  if(btn){const orig=btn.textContent;btn.textContent='✓ Kaydedildi!';btn.className='btn btn-green';setTimeout(()=>{btn.textContent=orig;btn.className='btn';},1800);}
+  const data={};
+  OLCUM_FIELDS.forEach(f=>{const inp=document.getElementById('olcum_'+f.id);const val=parseFloat(inp.value);if(!isNaN(val))data[f.id]=val;});
+  S.olcumlar[goalMonthKey]=data;save();
+  const btn=document.querySelector('[onclick="saveOlcum()"]');
+  if(btn){const o=btn.textContent;btn.textContent='✓ Kaydedildi!';btn.className='btn btn-gr';setTimeout(()=>{btn.textContent=o;btn.className='btn';},1800);}
 }
-function updateHedefler(){
-  const ts=state.totalSeans||state.doneDays.length;
-  const mevcut=state.kiloData[state.kiloData.length-1].val;
-  const kayip=Math.max(0,+(90-mevcut).toFixed(1));
+
+function updateHedeflerProgress(){
+  const mevcut=S.kiloData[S.kiloData.length-1].val;
+  const kayip=Math.max(0,+(92-mevcut).toFixed(1));
+  const kiloPct=Math.min(Math.round(kayip/12*100),100);
+  const ayDone=S.doneDays.filter(dk=>dk.startsWith(goalMonthKey)).length;
+  const antPct=Math.min(Math.round(ayDone/16*100),100);
   const el=id=>document.getElementById(id);
   const setEl=(id,t)=>{const e=el(id);if(e)e.textContent=t;};
   const setW=(id,w)=>{const e=el(id);if(e)e.style.width=Math.min(w,100)+'%';};
-  setEl('hp-kilo',kayip+" / 3 kg");setW('hpf-kilo',Math.min(Math.round(kayip/3*100),100));
-  setEl('hp-ant',ts+" / 16");setW('hpf-ant',Math.min(Math.round(ts/16*100),100));
+  setEl('hp-kilo2',kayip+' / 12 kg');setW('hpf-kilo',kiloPct);
+  setEl('hp-ant2',ayDone+' / 16');setW('hpf-ant',antPct);
+  // anasayfa bars
+  setEl('ph-kilo',kayip+' / 12 kg');setW('pf-kilo',kiloPct);
+  setEl('ph-ant',ayDone+' / 16');setW('pf-ant',antPct);
 }
 
-/* ─── BOOT ─── */
+let monthlyChart=null;
+function renderMonthlyChart(){
+  const cv=document.getElementById('monthlyChart');if(!cv)return;
+  if(monthlyChart){monthlyChart.destroy();monthlyChart=null;}
+  const labels=MONTHS_2026.map(m=>m.slice(0,3));
+  const data=Array.from({length:12},(_,m)=>{
+    const key=`2026-${String(m+1).padStart(2,'0')}`;
+    return S.doneDays.filter(dk=>dk.startsWith(key)).length;
+  });
+  monthlyChart=new Chart(cv,{type:'bar',data:{labels,datasets:[{
+    label:'Seans',data,
+    backgroundColor:data.map(v=>v>0?'rgba(91,156,246,.75)':'rgba(25,28,40,.8)'),
+    borderRadius:6,borderSkipped:false
+  }]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+    x:{ticks:{color:'#3e4466',font:{size:10}},grid:{display:false},border:{display:false}},
+    y:{ticks:{color:'#3e4466',font:{size:10},stepSize:4},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false},min:0,suggestedMax:20}
+  }}});
+}
+
+/* ═══════════════════════════════════════════════════════
+   ANASAYFA ÖZET TABLO
+═══════════════════════════════════════════════════════ */
+function renderWeekSummaryTable(){
+  const c=document.getElementById('weekSummaryTable');if(!c)return;
+  const aylar=["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
+  const table=document.createElement('table');
+  table.style.cssText='width:100%;border-collapse:collapse;font-size:12px';
+  const thStyle='text-align:left;padding:6px 8px;font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border)';
+  table.innerHTML=`<thead><tr>
+    <th style="${thStyle}">Gün / Tarih</th>
+    <th style="${thStyle}">Program</th>
+    <th style="${thStyle}">Süre</th>
+    <th style="${thStyle};text-align:center">Durum</th>
+  </tr></thead>`;
+  const tbody=document.createElement('tbody');
+  for(let i=0;i<7;i++){
+    const d=new Date(selectedWeekMonday);d.setDate(d.getDate()+i);
+    const def=DAYS_DEF[i];
+    const dk=dateKey(d);
+    const done=S.doneDays.includes(dk);
+    const today2=isToday(d);
+    const tarih=d.getDate()+' '+aylar[d.getMonth()];
+    const tr=document.createElement('tr');
+    if(today2) tr.style.background='rgba(91,156,246,0.06)';
+    else if(done&&def.train) tr.style.background='rgba(46,204,135,0.05)';
+    if(def.train){tr.style.cursor='pointer';tr.onclick=()=>toggleDayDone(dk,d);}
+    // Gün/tarih cell
+    const td1=document.createElement('td');
+    td1.style.cssText='padding:8px;border-bottom:1px solid var(--border)';
+    td1.innerHTML='<div style="font-size:11px;font-weight:700;color:'+(today2?'var(--blue)':def.blocked?'var(--text3)':'var(--text)')+'">'+def.short+'</div>'
+      +'<div style="font-size:9px;color:var(--text3);font-family:var(--mono)">'+tarih+'</div>';
+    // Program cell
+    const td2=document.createElement('td');
+    td2.style.cssText='padding:8px;border-bottom:1px solid var(--border)';
+    td2.innerHTML='<div style="display:flex;align-items:center;gap:5px">'
+      +'<span style="font-size:13px">'+def.ico+'</span>'
+      +'<span style="font-size:11px;font-weight:500;color:'+(def.blocked?'var(--text3)':def.rest?'var(--amber)':'var(--text2)')+'">'+def.type+'</span>'
+      +'</div>';
+    // Süre cell
+    const td3=document.createElement('td');
+    td3.style.cssText='padding:8px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--text3)';
+    td3.textContent=def.dur;
+    // Durum cell
+    const td4=document.createElement('td');
+    td4.style.cssText='padding:8px;border-bottom:1px solid var(--border);text-align:center';
+    if(def.train){
+      td4.innerHTML=done
+        ?'<span style="font-size:11px;font-weight:700;color:var(--green)">✓ Yapıldı</span>'
+        :'<span style="font-size:11px;font-weight:600;color:var(--text3)">— Bekliyor</span>';
+    } else if(def.blocked){
+      td4.innerHTML='<span style="font-size:10px;color:var(--text3)">📚 Eğitim</span>';
+    } else {
+      td4.innerHTML='<span style="font-size:10px;color:var(--amber)">🧘 Dinlenme</span>';
+    }
+    tr.appendChild(td1);tr.appendChild(td2);tr.appendChild(td3);tr.appendChild(td4);
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+  c.innerHTML='';c.appendChild(table);
+}
+
+
+let homeActivityChart=null;
+function renderHomeActivityChart(){
+  const cv=document.getElementById('homeActivityChart');if(!cv)return;
+  if(homeActivityChart){homeActivityChart.destroy();homeActivityChart=null;}
+  // Son 6 ay
+  const now=new Date();
+  const labels=[];const data=[];
+  for(let i=5;i>=0;i--){
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const ay=MONTHS_2026[d.getMonth()];
+    labels.push(ay.slice(0,3));
+    data.push(S.doneDays.filter(dk=>dk.startsWith(key)).length);
+  }
+  homeActivityChart=new Chart(cv,{
+    type:'bar',
+    data:{labels,datasets:[{
+      label:'Seans',data,
+      backgroundColor:data.map(v=>v>0?'rgba(91,156,246,.8)':'rgba(25,28,40,.7)'),
+      borderRadius:5,borderSkipped:false
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw+' seans'}}},scales:{
+      x:{ticks:{color:'#3e4466',font:{size:9}},grid:{display:false},border:{display:false}},
+      y:{ticks:{color:'#3e4466',font:{size:9},stepSize:4},grid:{color:'rgba(255,255,255,0.03)'},border:{display:false},min:0,suggestedMax:16}
+    }}
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   BOOT
+═══════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded',()=>{
-  initHeader();renderWeekGrid();renderChecklist();renderProgramAccordion();
-  renderKiloHistory();renderDurBars();renderOlcumForm();updateMetrics();updateHedefler();
-  setTimeout(initKiloChart,100);setTimeout(initSurelerChart,150);
+  initHeader();
+  renderCalendar();
+  updateWeekStripLabel();
+  renderChecklist();
+  renderProgramAccordion();
+  renderKiloHistory();
+  renderDurBars();
+  updateMetrics();      // calls renderWeekSummaryTable + renderHomeActivityChart
+  updateNavBadge();
+  updateHedeflerProgress();
+  setTimeout(initKiloChart,100);
+  setTimeout(initSurelerChart,150);
 });
 </script>
 </body>
